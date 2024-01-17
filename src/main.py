@@ -8,7 +8,7 @@ def main(page: ft.Page):
     page.title = "Cookie - Ground Control system (GCS)"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 30
-    page.scroll = ft.ScrollMode.ALWAYS
+    page.scroll = ft.ScrollMode.HIDDEN
     mission_time = "00:00:00"
     packet_count = 0
     team_code = 1022
@@ -19,11 +19,11 @@ def main(page: ft.Page):
     data_points_example = [
         ft.LineChartDataPoint(1, 1),
         ft.LineChartDataPoint(3, 3),
-        ft.LineChartDataPoint(5, 1.4),
-        ft.LineChartDataPoint(7, 3.4),
+        ft.LineChartDataPoint(5, 4),
+        ft.LineChartDataPoint(7, 4),
         ft.LineChartDataPoint(10, 2),
-        ft.LineChartDataPoint(12, 2.2),
-        ft.LineChartDataPoint(13, 1.8),
+        ft.LineChartDataPoint(12, 2),
+        ft.LineChartDataPoint(13, 8),
     ]
 
     page.add(
