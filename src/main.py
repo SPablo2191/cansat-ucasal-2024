@@ -2,6 +2,7 @@ import flet as ft
 from components.measurer_card import get_measurer_card
 from components.sub_title import get_sub_title
 from components.altitude_chart import get_plot_altitude_chart
+from components.map import FletMap
 
 
 def main(page: ft.Page):
@@ -11,7 +12,7 @@ def main(page: ft.Page):
     page.scroll = ft.ScrollMode.HIDDEN
     mission_time = "00:00:00"
     packet_count = 0
-    team_code = 1022
+    team_code = 2030
     stage_status = "Ascent"
     temperature = 23
     pressure = 20
@@ -86,6 +87,32 @@ def main(page: ft.Page):
                         get_plot_altitude_chart(data_points_example),
                     ]
                 ),
+                ft.Column(
+                    controls=[
+                        get_sub_title(value="GPS Latitude and Longitude"),
+                        ft.Container(
+                            content=FletMap(
+                                zoom=19,
+                                latitude=-24.78913,
+                                longtitude=-65.41037,
+                                screenView=(2, 2),
+                            ),
+                            alignment=ft.alignment.center,
+                            shadow=ft.BoxShadow(
+                                spread_radius=1,
+                                blur_radius=10,
+                                color=ft.colors.BLUE_GREY_300,
+                                offset=ft.Offset(0, 0),
+                                blur_style=ft.ShadowBlurStyle.OUTER,
+                            ),
+                        ),
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+                ft.Column(controls=[
+                    
+                ])
             ]
         ),
     )
