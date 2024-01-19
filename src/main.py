@@ -163,7 +163,7 @@ def main(page: ft.Page):
                             ft.FilledButton(
                                 text="Send",
                                 icon=ft.icons.SEND,
-                                width=180,
+                                width=190,
                                 height= 50,
                                 style= ft.ButtonStyle(
                                     shape= ft.RoundedRectangleBorder(radius=10)
