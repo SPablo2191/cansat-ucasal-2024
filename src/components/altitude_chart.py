@@ -29,7 +29,7 @@ def get_plot_altitude_chart(data_points):
             title=ft.Text("Time (s)"),
             labels_size=32,
         ),
-        tooltip_bgcolor=ft.colors.with_opacity(0.8, ft.colors.BLUE_GREY),
+        tooltip_bgcolor=ft.colors.with_opacity(0.8, ft.colors.WHITE),
         min_y=0,
         max_y=max(point.y for point in data_points),
         min_x=min(point.x for point in data_points),

@@ -24,6 +24,6 @@ def get_element_status(icon, value, status):
             horizontal_alignment=CrossAxisAlignment.CENTER,
         ),
         width=100,
-        alignment= alignment.center,
+        alignment=alignment.center,
         margin=20,
     )

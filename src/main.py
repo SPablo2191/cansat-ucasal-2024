@@ -4,6 +4,7 @@ from components.sub_title import get_sub_title
 from components.altitude_chart import get_plot_altitude_chart
 from components.map import FletMap
 from components.element_status import get_element_status
+from components.text_field import get_text_field
 
 
 def main(page: ft.Page):
@@ -35,8 +36,11 @@ def main(page: ft.Page):
     switch_value2 = False
     switch_value3 = False
     switch_value4 = False
+    received_data = ""
+    command = ""
 
     page.add(
+        # Header
         ft.Row(
             controls=[
                 ft.Column(
@@ -62,6 +66,9 @@ def main(page: ft.Page):
             vertical_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=100,
         ),
+
+
+        # Body
         ft.Row(
             controls=[
                 ft.Column(
@@ -91,16 +98,21 @@ def main(page: ft.Page):
                             content=get_sub_title(value="Payload Altitude"),
                             alignment=ft.alignment.center,
                             width=550,
-                            margin=10,
+
                         ),
                         get_plot_altitude_chart(data_points_example),
                     ]
                 ),
                 ft.Column(
                     controls=[
-                        get_sub_title(value="GPS Latitude and Longitude"),
                         ft.Container(
+                            content=get_sub_title(value="GPS Latitude and Longitude"),
+                            alignment=ft.alignment.center,
+                            width=450,
                             margin=20,
+                        ),
+                        ft.Container(
+                            
                             content=FletMap(
                                 zoom=19,
                                 latitude=latitude,
@@ -136,6 +148,28 @@ def main(page: ft.Page):
                         ft.Switch(value=switch_value2, label="Btn 2"),
                         ft.Switch(value=switch_value3, label="Btn 3"),
                         ft.Switch(value=switch_value4, label="Btn 4"),
+                    ]
+                ),
+            ]
+        ),
+        ft.Row(
+            controls=[
+                ft.Column(
+                    controls=[
+                        get_sub_title(value="Telemetry"),
+                        get_text_field(value=received_data, placeholder="Received", width= 1000),
+                        ft.Row(controls=[
+                            get_text_field(value=command , placeholder="Command", width= 800),
+                            ft.FilledButton(
+                                text="Send",
+                                icon=ft.icons.SEND,
+                                width=180,
+                                height= 50,
+                                style= ft.ButtonStyle(
+                                    shape= ft.RoundedRectangleBorder(radius=10)
+                                )
+                            ),
+                        ])
                     ]
                 ),
             ]
