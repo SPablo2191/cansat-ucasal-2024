@@ -65,13 +65,20 @@ This will install all the necessary packages for development.
 
 you can run the code manually using python execution style:
 ```bash
-python src/app.py
+python src/main.py
 ```
 or use the flet CLI (you can use hotreload):
 ```bash
-flet run --directory src/app.py
+flet run --directory src/main.py
 ```
-
+or go to src directory:
+```bash
+cd src && flet run
+```
+also if you want to run the project on the web, you have to execute the following command:
+```bash
+flet run --directory src/main.py --w
+```
 ## Contributing
 
 - [Pablo Sandoval](https://github.com/SPablo2191)
