@@ -3,6 +3,7 @@ from components.measurer_card import get_measurer_card
 from components.sub_title import get_sub_title
 from components.altitude_chart import get_plot_altitude_chart
 from components.map import FletMap
+from components.element_status import get_element_status
 
 
 def main(page: ft.Page):
@@ -26,6 +27,14 @@ def main(page: ft.Page):
         ft.LineChartDataPoint(12, 2),
         ft.LineChartDataPoint(13, 8),
     ]
+    latitude = -24.78913
+    longitude = -65.41037
+    parachute_status = True
+    heat_shield_status = False
+    switch_value1 = False
+    switch_value2 = False
+    switch_value3 = False
+    switch_value4 = False
 
     page.add(
         ft.Row(
@@ -91,10 +100,11 @@ def main(page: ft.Page):
                     controls=[
                         get_sub_title(value="GPS Latitude and Longitude"),
                         ft.Container(
+                            margin=20,
                             content=FletMap(
                                 zoom=19,
-                                latitude=-24.78913,
-                                longtitude=-65.41037,
+                                latitude=latitude,
+                                longtitude=longitude,
                                 screenView=(2, 2),
                             ),
                             alignment=ft.alignment.center,
@@ -110,9 +120,24 @@ def main(page: ft.Page):
                     alignment=ft.MainAxisAlignment.START,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 ),
-                ft.Column(controls=[
-                    
-                ])
+                ft.Column(
+                    controls=[
+                        get_element_status(
+                            value="Parachute",
+                            icon=ft.icons.PARAGLIDING,
+                            status=parachute_status,
+                        ),
+                        get_element_status(
+                            value="Heat Shield",
+                            icon=ft.icons.SHIELD,
+                            status=heat_shield_status,
+                        ),
+                        ft.Switch(value=switch_value1, label="Btn 1"),
+                        ft.Switch(value=switch_value2, label="Btn 2"),
+                        ft.Switch(value=switch_value3, label="Btn 3"),
+                        ft.Switch(value=switch_value4, label="Btn 4"),
+                    ]
+                ),
             ]
         ),
     )
