@@ -13,6 +13,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 30
     page.scroll = ft.ScrollMode.HIDDEN
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     groundSystemViewModel = GroundSystemViewModel()
 
     page.add(
@@ -143,7 +144,9 @@ def main(page: ft.Page):
                         ),
                     ]
                 ),
-            ]
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
         ),
         ft.Row(
             controls=[

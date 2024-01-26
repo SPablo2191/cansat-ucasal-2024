@@ -19,9 +19,9 @@ class GroundSystemViewModel:
         ft.LineChartDataPoint(12, 2),
         ft.LineChartDataPoint(13, 8),
     ]
-    gps_altitude = 19
-    gps_latitude = -24.78913
-    gps_longitude = -65.41037
+    gps_altitude = 14
+    gps_latitude = 28.3882648
+    gps_longitude = -80.6273621
     parachute_status = True
     heat_shield_status = False
     switch_value1 = False
