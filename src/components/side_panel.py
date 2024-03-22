@@ -12,21 +12,23 @@ from flet import (
     Image,
     ImageFit,
     FontWeight,
-    MainAxisAlignment
+    MainAxisAlignment,
+    TextAlign,
+    padding
 )
 
 
-def get_side_panel(team_id: int) -> Container:
+def get_side_panel(team_id: int, mission_time: str) -> Container:
     return Container(
         content=Column(
-            controls=[get_main_title(team_id=team_id)],
+            controls=[
+                get_main_title(team_id=team_id),
+                get_mission_time(mission_time=mission_time),
+            ],
             horizontal_alignment=CrossAxisAlignment.CENTER,
         ),
-        margin=10,
-        padding=10,
+        padding=padding.symmetric(20,30),
         alignment=alignment.center,
-        width=150,
-        height=125,
         border_radius=10,
         shadow=BoxShadow(
             spread_radius=1,
@@ -39,16 +41,15 @@ def get_side_panel(team_id: int) -> Container:
 
 
 def get_main_title(team_id: int):
+    text_size = 20
     return Row(
         controls=[
-            Text(
-                value="TEAM",
-                weight=FontWeight.BOLD,
-            ),
+            Text(value="TEAM", weight=FontWeight.BOLD, size=text_size),
             Text(
                 value=f"#{team_id}",
+                size=text_size,
                 weight=FontWeight.BOLD,
-                color= "#6B9CC9"
+                color="#6B9CC9",
             ),
             Image(
                 "images/argentina_flag.png",
@@ -57,5 +58,21 @@ def get_main_title(team_id: int):
                 height=14,
             ),
         ],
-        alignment= MainAxisAlignment.CENTER
+        alignment=MainAxisAlignment.CENTER,
+    )
+
+
+def get_mission_time(mission_time: str):
+    return Column(
+        controls=[
+            Text(value=mission_time, weight=FontWeight.BOLD, size=25),
+            Text(
+                "Mission Time",
+                weight=FontWeight.BOLD,
+                text_align=TextAlign.CENTER,
+                size=10,
+            ),
+        ],
+        spacing=3,
+        horizontal_alignment=CrossAxisAlignment.CENTER,
     )

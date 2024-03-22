@@ -11,7 +11,7 @@ def main(page: ft.Page):
     }
     page.theme = ft.Theme(font_family="inria sans")
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.padding = 30
+    page.padding = 20
     page.scroll = ft.ScrollMode.HIDDEN
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
@@ -32,7 +32,8 @@ def main(page: ft.Page):
         ft.Row(
             controls=[
                 get_side_panel(
-                    team_id= groundControlSystemViewModel.team_id
+                    team_id= groundControlSystemViewModel.team_id,
+                    mission_time = groundControlSystemViewModel.mission_time
                 )
             ]
         )
