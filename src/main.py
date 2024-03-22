@@ -16,10 +16,8 @@ def main(page: ft.Page):
 
     def animate(e):
         gauge.value = user_entry.value
-        print(f"el valor es => {user_entry.value}")
         if len(gauge.value) > 0:
             current_value = int(gauge.value)
-            print(current_value)
             curr_degree = int(current_value * 3) + 210 % 360
             if current_value <= 50:
                 gauge.pointer.rotate.angle = math.radians(curr_degree - 360)
@@ -32,9 +30,7 @@ def main(page: ft.Page):
     page.add(
         ft.Row(
             controls=[
-                gauge.get_component(),
-                user_entry,
-                ft.ElevatedButton("Animate!", on_click=animate),
+
             ]
         )
     )
