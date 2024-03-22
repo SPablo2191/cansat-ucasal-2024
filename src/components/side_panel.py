@@ -16,7 +16,7 @@ from flet import (
     TextAlign,
     padding
 )
-
+from .horizontal_line import get_horizontal_line
 
 def get_side_panel(team_id: int, mission_time: str) -> Container:
     return Container(
@@ -24,6 +24,7 @@ def get_side_panel(team_id: int, mission_time: str) -> Container:
             controls=[
                 get_main_title(team_id=team_id),
                 get_mission_time(mission_time=mission_time),
+                get_horizontal_line(),
             ],
             horizontal_alignment=CrossAxisAlignment.CENTER,
         ),
@@ -65,12 +66,12 @@ def get_main_title(team_id: int):
 def get_mission_time(mission_time: str):
     return Column(
         controls=[
-            Text(value=mission_time, weight=FontWeight.BOLD, size=25),
+            Text(value=mission_time, weight=FontWeight.BOLD, size=30),
             Text(
                 "Mission Time",
                 weight=FontWeight.BOLD,
                 text_align=TextAlign.CENTER,
-                size=10,
+                size=12,
             ),
         ],
         spacing=3,
