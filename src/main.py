@@ -1,6 +1,6 @@
 import flet as ft
 from components.side_panel import get_side_panel
-from models.ground_control_system_view_model import GroundControlSystemViewModel
+from models.ground_control_system_view_model import GroundControlSystemViewModel,State
 import math
 
 def main(page: ft.Page):
@@ -33,7 +33,10 @@ def main(page: ft.Page):
             controls=[
                 get_side_panel(
                     team_id= groundControlSystemViewModel.team_id,
-                    mission_time = groundControlSystemViewModel.mission_time
+                    mission_time = groundControlSystemViewModel.mission_time,
+                    telemetry= groundControlSystemViewModel.telemetry,
+                    heat_shield= groundControlSystemViewModel.hs_deployed,
+                    simulation_mode= groundControlSystemViewModel.state == State.SIMULATION
                 )
             ]
         )

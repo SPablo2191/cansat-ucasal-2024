@@ -1,5 +1,9 @@
 import flet as ft
+from enum import StrEnum
 
+class State(StrEnum):
+    ASCENT = 'Ascent'
+    SIMULATION = 'Simulation'
 
 class GroundControlSystemViewModel:
     def __init__(self):
@@ -7,7 +11,7 @@ class GroundControlSystemViewModel:
         self.mission_time = "00:00:00"
         self.packet_count = 0
         self.team_id = 2030
-        self.state = "Ascent"
+        self.state = State.ASCENT
         self.altitude = 0
         self.air_speed = 0
         self.hs_deployed = False # heatshield state
@@ -27,3 +31,4 @@ class GroundControlSystemViewModel:
         self.received_data = ""
         self.command = ""
         self.data_points_example = []
+        self.telemetry = False
