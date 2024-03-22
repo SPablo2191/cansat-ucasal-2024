@@ -1,7 +1,7 @@
 import flet as ft
 from components.text_field import get_text_field
 from components.gauge import Gauge
-from models.ground_system_view_model import GroundSystemViewModel
+from models.ground_control_system_view_model import GroundControlSystemViewModel
 import math
 
 def main(page: ft.Page):
@@ -10,7 +10,7 @@ def main(page: ft.Page):
     page.padding = 30
     page.scroll = ft.ScrollMode.HIDDEN
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    groundSystemViewModel = GroundSystemViewModel()
+    groundControlSystemViewModel = GroundControlSystemViewModel()
     gauge = Gauge()
     user_entry = get_text_field(value="0")
 
