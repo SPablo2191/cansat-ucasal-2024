@@ -9,6 +9,7 @@ def main(page: ft.Page):
     page.fonts = {
         "inria sans" : "fonts/inria-sans.ttf"
     }
+    page.theme = ft.Theme(font_family="inria sans")
     page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 30
     page.scroll = ft.ScrollMode.HIDDEN
@@ -30,7 +31,9 @@ def main(page: ft.Page):
     page.add(
         ft.Row(
             controls=[
-                get_side_panel()
+                get_side_panel(
+                    team_id= groundControlSystemViewModel.team_id
+                )
             ]
         )
     )
