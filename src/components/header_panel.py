@@ -16,6 +16,7 @@ from flet import (
     ElevatedButton,
     icons,
     ButtonStyle,
+    MainAxisAlignment
 )
 
 
@@ -34,6 +35,7 @@ def get_header_panel(
                 get_connection_buttons()
             ],
             spacing=40,
+            alignment=MainAxisAlignment.CENTER
         ),
         padding=padding.symmetric(10, 30),
         alignment=alignment.center,

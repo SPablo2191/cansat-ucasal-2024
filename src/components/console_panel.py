@@ -8,16 +8,17 @@ from flet import (
     Offset,
     ShadowBlurStyle,
     padding,
-    FilledButton,
+    ElevatedButton,
     icons,
     ButtonStyle,
     RoundedRectangleBorder,
     Row,
+    MainAxisAlignment
 )
 from .text_field import get_text_field
 
 
-def get_console_panel(command: str, received_data : str) -> Container:
+def get_console_panel(command: str, received_data: str) -> Container:
     return Container(
         content=Row(
             controls=[
@@ -32,19 +33,24 @@ def get_console_panel(command: str, received_data : str) -> Container:
                         get_text_field(
                             value=command,
                             label="Command",
-                            placeholder = "Enter a command...",
+                            placeholder="Enter a command...",
                             width=600,
                         ),
                     ]
                 ),
-                FilledButton(
+                ElevatedButton(
                     text="Send",
                     icon=icons.SEND,
                     width=190,
                     height=50,
-                    style=ButtonStyle(shape=RoundedRectangleBorder(radius=10)),
+                    style=ButtonStyle(
+                        shape=RoundedRectangleBorder(radius=10),
+                        bgcolor="#6B9CC9",
+                        color=colors.WHITE,
+                    ),
                 ),
-            ]
+            ],
+        alignment=MainAxisAlignment.CENTER,
         ),
         padding=padding.symmetric(10, 30),
         alignment=alignment.center,

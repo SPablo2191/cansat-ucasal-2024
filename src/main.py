@@ -58,8 +58,9 @@ def main(page: ft.Page):
                         ),
                     ],
                     alignment=ft.MainAxisAlignment.START,
+                    expand= True
                 ),
-            ]
+            ],
         )
     )
 

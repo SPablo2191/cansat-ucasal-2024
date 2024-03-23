@@ -20,7 +20,7 @@ from flet import (
     ButtonStyle,
     Switch,
     IconButton,
-    Page
+    Page,
 )
 from .horizontal_line import get_horizontal_line
 from .change_theme_button import get_change_theme_button
@@ -32,12 +32,14 @@ def get_side_panel(
     telemetry: bool,
     heat_shield: bool,
     simulation_mode: bool,
-    page : Page
+    page: Page,
 ) -> Container:
     button_width = 180
     background_color = "#6B9CC9"
+
     def open_repo(e):
-        page.launch_url('https://github.com/SPablo2191/cansat-ucasal-2024')
+        page.launch_url("https://github.com/SPablo2191/cansat-ucasal-2024")
+
     return Container(
         content=Column(
             controls=[
@@ -97,10 +99,11 @@ def get_side_panel(
                             icon_color=background_color,
                             icon_size=30,
                             tooltip="Github Repository",
-                            on_click=open_repo
+                            on_click=open_repo,
                         ),
-                        get_change_theme_button(page= page, bgcolor=background_color)
-                    ]
+                        get_change_theme_button(page=page, bgcolor=background_color),
+                    ],
+                    alignment=MainAxisAlignment.CENTER,
                 ),
             ],
             horizontal_alignment=CrossAxisAlignment.CENTER,

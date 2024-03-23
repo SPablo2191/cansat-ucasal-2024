@@ -23,4 +23,5 @@ def get_body_panel() -> Container:
             offset=Offset(0, 0),
             blur_style=ShadowBlurStyle.OUTER,
         ),
+        height=400
     )
