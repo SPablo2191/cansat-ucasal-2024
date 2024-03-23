@@ -16,6 +16,7 @@ def get_change_theme_button(page: Page, bgcolor : str) -> IconButton:
         on_click=changetheme,
         icon="dark_mode",
         selected_icon="light_mode",
+        tooltip="Change theme",
         bgcolor= bgcolor,
         style=ButtonStyle(color=colors.WHITE),
     )

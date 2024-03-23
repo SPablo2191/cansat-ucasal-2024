@@ -13,6 +13,9 @@ from flet import (
     FontWeight,
     Dropdown,
     dropdown,
+    ElevatedButton,
+    icons,
+    ButtonStyle,
 )
 
 
@@ -28,6 +31,7 @@ def get_header_panel(
                 get_data(label="Pressure", value=f"{pressure} kPa"),
                 get_data(label="Voltage", value=f"{voltage}V"),
                 get_serial_port_options(),
+                get_connection_buttons()
             ],
             spacing=40,
         ),
@@ -75,6 +79,30 @@ def get_serial_port_options():
                     dropdown.Option("Green"),
                     dropdown.Option("Blue"),
                 ],
+            ),
+        ],
+        horizontal_alignment=CrossAxisAlignment.CENTER,
+    )
+
+
+def get_connection_buttons():
+    button_width = 180
+    background_color = "#6B9CC9"
+    return Column(
+        controls=[
+            ElevatedButton(
+                "DISCONNECT",
+                disabled=True,
+                icon=icons.LOGOUT_ROUNDED,
+                style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
+                width=button_width,
+            ),
+            ElevatedButton(
+                "CONNECT",
+                disabled=False,
+                icon=icons.LOGIN_ROUNDED,
+                style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
+                width=button_width,
             ),
         ],
         horizontal_alignment=CrossAxisAlignment.CENTER,
