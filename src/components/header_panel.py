@@ -11,6 +11,8 @@ from flet import (
     Text,
     CrossAxisAlignment,
     FontWeight,
+    Dropdown,
+    dropdown,
 )
 
 
@@ -25,11 +27,9 @@ def get_header_panel(
                 get_data(label="Temperature", value=f"{temperature} °C"),
                 get_data(label="Pressure", value=f"{pressure} kPa"),
                 get_data(label="Voltage", value=f"{voltage}V"),
-                Container(
-                    width=60
-                )
+                get_serial_port_options(),
             ],
-            spacing= 40
+            spacing=40,
         ),
         padding=padding.symmetric(10, 30),
         alignment=alignment.center,
@@ -56,8 +56,26 @@ def get_state():
 def get_data(label: str, value: str):
     return Column(
         controls=[
-            Text(label),
+            Text(label, weight=FontWeight.BOLD),
             Text(value, weight=FontWeight.BOLD, size=20),
+        ],
+        horizontal_alignment=CrossAxisAlignment.CENTER,
+    )
+
+
+def get_serial_port_options():
+    return Column(
+        controls=[
+            Text("Serial Port", weight=FontWeight.BOLD),
+            Dropdown(
+                hint_text="Choose a port...",
+                width=200,
+                options=[
+                    dropdown.Option("Red"),
+                    dropdown.Option("Green"),
+                    dropdown.Option("Blue"),
+                ],
+            ),
         ],
         horizontal_alignment=CrossAxisAlignment.CENTER,
     )
