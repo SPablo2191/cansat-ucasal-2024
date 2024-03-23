@@ -23,6 +23,7 @@ from flet import (
     Page
 )
 from .horizontal_line import get_horizontal_line
+from .change_theme_button import get_change_theme_button
 
 
 def get_side_panel(
@@ -98,6 +99,7 @@ def get_side_panel(
                             tooltip="Github Repository",
                             on_click=open_repo
                         ),
+                        get_change_theme_button(page= page, bgcolor=background_color)
                     ]
                 ),
             ],

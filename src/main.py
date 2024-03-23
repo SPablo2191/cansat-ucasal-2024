@@ -10,10 +10,10 @@ def main(page: ft.Page):
     page.title = groundControlSystemViewModel.system_name
     page.fonts = {"inria sans": "fonts/inria-sans.ttf"}
     page.theme = ft.Theme(font_family="inria sans")
-    page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 20
     page.scroll = ft.ScrollMode.HIDDEN
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.splash = ft.ProgressBar(visible=False)
 
     # def animate(e):
     #     gauge.value = user_entry.value
