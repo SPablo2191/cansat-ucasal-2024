@@ -36,7 +36,8 @@ def main(page: ft.Page):
                     mission_time = groundControlSystemViewModel.mission_time,
                     telemetry= groundControlSystemViewModel.telemetry,
                     heat_shield= groundControlSystemViewModel.hs_deployed,
-                    simulation_mode= groundControlSystemViewModel.state == State.SIMULATION
+                    simulation_mode= groundControlSystemViewModel.state == State.SIMULATION,
+                    page = page
                 )
             ]
         )

@@ -19,6 +19,8 @@ from flet import (
     icons,
     ButtonStyle,
     Switch,
+    IconButton,
+    Page
 )
 from .horizontal_line import get_horizontal_line
 
@@ -29,8 +31,12 @@ def get_side_panel(
     telemetry: bool,
     heat_shield: bool,
     simulation_mode: bool,
+    page : Page
 ) -> Container:
     button_width = 180
+    background_color = "#6B9CC9"
+    def open_repo(e):
+        page.launch_url('https://github.com/SPablo2191/cansat-ucasal-2024')
     return Container(
         content=Column(
             controls=[
@@ -40,21 +46,21 @@ def get_side_panel(
                 ElevatedButton(
                     "Graph",
                     icon=icons.AUTO_GRAPH_ROUNDED,
-                    style=ButtonStyle(color=colors.WHITE, bgcolor="#6B9CC9"),
+                    style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
                     width=button_width,
                 ),
                 ElevatedButton(
                     "Map",
                     icon=icons.MAP_ROUNDED,
-                    style=ButtonStyle(color=colors.WHITE, bgcolor="#6B9CC9"),
+                    style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
                     width=button_width,
                 ),
                 get_horizontal_line(),
                 Column(
                     controls=[
                         Switch(value=telemetry, label="Telemetry"),
-                        Switch(value=telemetry, label="Heat Shield"),
-                        Switch(value=telemetry, label="Simulation Mode"),
+                        Switch(value=heat_shield, label="Heat Shield"),
+                        Switch(value=simulation_mode, label="Simulation Mode"),
                     ],
                     horizontal_alignment=CrossAxisAlignment.START,
                 ),
@@ -62,26 +68,37 @@ def get_side_panel(
                 ElevatedButton(
                     "Sim. Enable",
                     icon=icons.BROADCAST_ON_PERSONAL_SHARP,
-                    style=ButtonStyle(color=colors.WHITE, bgcolor="#6B9CC9"),
+                    style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
                     width=button_width,
                 ),
                 ElevatedButton(
                     "Sim. Activate",
                     icon=icons.BROADCAST_ON_HOME_OUTLINED,
-                    style=ButtonStyle(color=colors.WHITE, bgcolor="#6B9CC9"),
+                    style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
                     width=button_width,
                 ),
                 ElevatedButton(
                     "Parachute",
                     icon=icons.PARAGLIDING,
-                    style=ButtonStyle(color=colors.WHITE, bgcolor="#6B9CC9"),
+                    style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
                     width=button_width,
                 ),
                 ElevatedButton(
                     "Export",
                     icon=icons.IMPORT_EXPORT_ROUNDED,
-                    style=ButtonStyle(color=colors.WHITE, bgcolor="#6B9CC9"),
+                    style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
                     width=button_width,
+                ),
+                Row(
+                    controls=[
+                        IconButton(
+                            icon=icons.LOGO_DEV,
+                            icon_color=background_color,
+                            icon_size=30,
+                            tooltip="Github Repository",
+                            on_click=open_repo
+                        ),
+                    ]
                 ),
             ],
             horizontal_alignment=CrossAxisAlignment.CENTER,
