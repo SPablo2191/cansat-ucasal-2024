@@ -1,14 +1,14 @@
 import flet as ft
-from components.side_panel import get_side_panel
-from models.ground_control_system_view_model import GroundControlSystemViewModel,State
 import math
+from components.side_panel import get_side_panel
+from components.header_panel import get_header_panel
+from models.ground_control_system_view_model import GroundControlSystemViewModel, State
+
 
 def main(page: ft.Page):
     groundControlSystemViewModel = GroundControlSystemViewModel()
     page.title = groundControlSystemViewModel.system_name
-    page.fonts = {
-        "inria sans" : "fonts/inria-sans.ttf"
-    }
+    page.fonts = {"inria sans": "fonts/inria-sans.ttf"}
     page.theme = ft.Theme(font_family="inria sans")
     page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 20
@@ -32,13 +32,27 @@ def main(page: ft.Page):
         ft.Row(
             controls=[
                 get_side_panel(
-                    team_id= groundControlSystemViewModel.team_id,
-                    mission_time = groundControlSystemViewModel.mission_time,
-                    telemetry= groundControlSystemViewModel.telemetry,
-                    heat_shield= groundControlSystemViewModel.hs_deployed,
-                    simulation_mode= groundControlSystemViewModel.state == State.SIMULATION,
-                    page = page
-                )
+                    team_id=groundControlSystemViewModel.team_id,
+                    mission_time=groundControlSystemViewModel.mission_time,
+                    telemetry=groundControlSystemViewModel.telemetry,
+                    heat_shield=groundControlSystemViewModel.hs_deployed,
+                    simulation_mode=groundControlSystemViewModel.state
+                    == State.SIMULATION,
+                    page=page,
+                ),
+                ft.Column(
+                    controls=[
+                        get_header_panel(
+                            state=groundControlSystemViewModel.state,
+                            packet_count=groundControlSystemViewModel.packet_count,
+                            temperature= groundControlSystemViewModel.temperature,
+                            pressure= groundControlSystemViewModel.pressure,
+                            voltage=groundControlSystemViewModel.voltage
+                        )
+                    ],
+                    height=660,
+                    alignment=ft.MainAxisAlignment.START,
+                ),
             ]
         )
     )
