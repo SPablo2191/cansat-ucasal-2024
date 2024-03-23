@@ -2,6 +2,7 @@ import flet as ft
 import math
 from components.side_panel import get_side_panel
 from components.header_panel import get_header_panel
+from components.console_panel import get_console_panel
 from models.ground_control_system_view_model import GroundControlSystemViewModel, State
 
 
@@ -45,12 +46,15 @@ def main(page: ft.Page):
                         get_header_panel(
                             state=groundControlSystemViewModel.state,
                             packet_count=groundControlSystemViewModel.packet_count,
-                            temperature= groundControlSystemViewModel.temperature,
-                            pressure= groundControlSystemViewModel.pressure,
-                            voltage=groundControlSystemViewModel.voltage
-                        )
+                            temperature=groundControlSystemViewModel.temperature,
+                            pressure=groundControlSystemViewModel.pressure,
+                            voltage=groundControlSystemViewModel.voltage,
+                        ),
+                        get_console_panel(
+                            command=groundControlSystemViewModel.command,
+                            received_data=groundControlSystemViewModel.received_data,
+                        ),
                     ],
-                    height=660,
                     alignment=ft.MainAxisAlignment.START,
                 ),
             ]
