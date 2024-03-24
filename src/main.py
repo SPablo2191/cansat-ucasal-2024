@@ -5,7 +5,6 @@ from components.console_panel import get_console_panel
 from components.body_panel import get_body_panel, get_map, get_charts
 from models.ground_control_system_view_model import GroundControlSystemViewModel, State
 
-
 def main(page: ft.Page):
     groundControlSystemViewModel = GroundControlSystemViewModel()
     page.title = groundControlSystemViewModel.system_name
@@ -29,18 +28,7 @@ def main(page: ft.Page):
     def go_to_map(e):
         body_panel.content.content = map_panel 
         page.update()
-    # def animate(e):
-    #     gauge.value = user_entry.value
-    #     if len(gauge.value) > 0:
-    #         current_value = int(gauge.value)
-    #         curr_degree = int(current_value * 3) + 210 % 360
-    #         if current_value <= 50:
-    #             gauge.pointer.rotate.angle = math.radians(curr_degree - 360)
-    #         else:
-    #             gauge.pointer.rotate.angle = math.radians(abs(curr_degree - 360))
-    #     else:
-    #         gauge.pointer.rotate.angle = gauge.math.radians(curr_degree - 360)
-    #     page.update()
+
 
     page.add(
         ft.Row(
