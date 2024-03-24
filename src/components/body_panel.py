@@ -85,14 +85,21 @@ def get_map(gps_altitude, gps_latitude, gps_longitude):
                         weight=FontWeight.BOLD,
                         text_align=TextAlign.CENTER,
                     ),
-                    Column(
+                ],
+                alignment=MainAxisAlignment.CENTER,
+            ),
+            Row(
+                controls=[
+                    Row(
                         controls=[
+                            Column(controls=[]),
                             FletMap(
-                                zoom=gps_altitude,
-                                latitude=gps_latitude,
-                                longtitude=gps_longitude,
-                                screenView=(2, 2),
-                            )
+                                expand=True,
+                                latitude=34.2,
+                                longtitude=29.9,
+                                zoom=5,
+                                screenView=[8, 4],
+                            ),
                         ]
                     ),
                 ],
