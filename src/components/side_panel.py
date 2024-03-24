@@ -107,6 +107,7 @@ def get_side_panel(
                 ),
             ],
             horizontal_alignment=CrossAxisAlignment.CENTER,
+            alignment=MainAxisAlignment.START
         ),
         padding=padding.symmetric(10, 30),
         alignment=alignment.center,
@@ -118,6 +119,7 @@ def get_side_panel(
             offset=Offset(0, 0),
             blur_style=ShadowBlurStyle.OUTER,
         ),
+        height=1150
     )
 
 

@@ -1,5 +1,4 @@
 import flet as ft
-import math
 from components.side_panel import get_side_panel
 from components.header_panel import get_header_panel
 from components.console_panel import get_console_panel
@@ -16,7 +15,6 @@ def main(page: ft.Page):
     page.scroll = ft.ScrollMode.HIDDEN
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.splash = ft.ProgressBar(visible=False)
-
     # def animate(e):
     #     gauge.value = user_entry.value
     #     if len(gauge.value) > 0:
@@ -51,14 +49,16 @@ def main(page: ft.Page):
                             pressure=groundControlSystemViewModel.pressure,
                             voltage=groundControlSystemViewModel.voltage,
                         ),
-                        get_body_panel(),
+                        get_body_panel(
+                            data = groundControlSystemViewModel.data_points_example
+                        ),
                         get_console_panel(
                             command=groundControlSystemViewModel.command,
                             received_data=groundControlSystemViewModel.received_data,
                         ),
                     ],
                     alignment=ft.MainAxisAlignment.START,
-                    expand= True
+                    expand=True,
                 ),
             ],
         )
