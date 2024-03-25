@@ -17,6 +17,9 @@ from flet import (
     AnimationCurve,
     CrossAxisAlignment,
     Image,
+    ImageFit,
+    ImageRepeat,
+    border_radius,
 )
 from .chart import get_plot_chart
 from .map import FletMap
@@ -183,10 +186,15 @@ def get_map(gps_altitude, gps_latitude, gps_longitude):
                             ),
                         ]
                     ),
-                    Image(src="https://tile.openstreetmap.org/7/63/42.png"),
+                    Image(
+                        src="https://a.tile.openstreetmap.org/14/4523/6843.png",
+                        fit=ImageFit.NONE,
+                        repeat=ImageRepeat.NO_REPEAT,
+                        border_radius=border_radius.all(10),
+                    ),
                 ],
                 alignment=MainAxisAlignment.CENTER,
-                spacing= 60
+                spacing=60,
             ),
         ],
         alignment=MainAxisAlignment.START,
