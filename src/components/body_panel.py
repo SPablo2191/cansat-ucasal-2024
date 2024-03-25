@@ -16,6 +16,7 @@ from flet import (
     AnimatedSwitcherTransition,
     AnimationCurve,
     CrossAxisAlignment,
+    Image,
 )
 from .chart import get_plot_chart
 from .map import FletMap
@@ -76,42 +77,89 @@ def get_charts(data):
 
 
 def get_map(gps_altitude, gps_latitude, gps_longitude):
-    print(gps_altitude, gps_latitude, gps_longitude)
+    print(
+        f"http://a.tile.openstreetmap.org/{gps_altitude}/{gps_latitude}/{gps_longitude}.png"
+    )
     return Column(
         controls=[
-            Container(
-                content=Row(
-                    controls=[
-                        Text(
-                            "Map",
-                            size=30,
-                            weight=FontWeight.BOLD,
-                            text_align=TextAlign.CENTER,
-                        ),
-                    ],
-                    alignment=MainAxisAlignment.CENTER,
-                ),
+            Row(
+                controls=[
+                    Text(
+                        "Map",
+                        size=30,
+                        weight=FontWeight.BOLD,
+                        text_align=TextAlign.CENTER,
+                    ),
+                ],
+                alignment=MainAxisAlignment.CENTER,
             ),
-            Container(
-                content=FletMap(
-                    expand=True,
-                    visible=True,
-                    zoom=gps_altitude,
-                    latitude=gps_latitude,
-                    longtitude=gps_longitude,
-                    screenView=(2, 2),
-                ),
-                alignment=alignment.center,
-                shadow=BoxShadow(
-                    spread_radius=1,
-                    blur_radius=10,
-                    color=colors.BLUE_GREY_300,
-                    offset=Offset(0, 0),
-                    blur_style=ShadowBlurStyle.OUTER,
-                ),
+            Row(
+                controls=[
+                    Column(
+                        controls=[
+                            Row(
+                                controls=[
+                                    Text(
+                                        "Longitude",
+                                        weight=FontWeight.BOLD,
+                                        size=20,
+                                    ),
+                                    Text(
+                                        "0",
+                                        weight=FontWeight.BOLD,
+                                        size=25,
+                                    ),
+                                ]
+                            ),
+                            Row(
+                                controls=[
+                                    Text(
+                                        "Longitude",
+                                        weight=FontWeight.BOLD,
+                                        size=20,
+                                    ),
+                                    Text(
+                                        "0",
+                                        weight=FontWeight.BOLD,
+                                        size=25,
+                                    ),
+                                ]
+                            ),
+                            Row(
+                                controls=[
+                                    Text(
+                                        "Longitude",
+                                        weight=FontWeight.BOLD,
+                                        size=20,
+                                    ),
+                                    Text(
+                                        "0",
+                                        weight=FontWeight.BOLD,
+                                        size=25,
+                                    ),
+                                ]
+                            ),
+                            Row(
+                                controls=[
+                                    Text(
+                                        "Longitude",
+                                        weight=FontWeight.BOLD,
+                                        size=20,
+                                    ),
+                                    Text(
+                                        "0",
+                                        weight=FontWeight.BOLD,
+                                        size=25,
+                                    ),
+                                ]
+                            ),
+                        ]
+                    ),
+                    Image(src="https://tile.openstreetmap.org/7/63/42.png"),
+                ],
+                alignment=MainAxisAlignment.CENTER,
             ),
         ],
         alignment=MainAxisAlignment.START,
         horizontal_alignment=CrossAxisAlignment.CENTER,
-        height=800,
     )
