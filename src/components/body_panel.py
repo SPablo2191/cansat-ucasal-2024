@@ -105,7 +105,7 @@ def get_map(gps_altitude, gps_latitude, gps_longitude):
                                         size=20,
                                     ),
                                     Text(
-                                        "0",
+                                        f"{gps_longitude}",
                                         weight=FontWeight.BOLD,
                                         size=25,
                                     ),
@@ -114,12 +114,12 @@ def get_map(gps_altitude, gps_latitude, gps_longitude):
                             Row(
                                 controls=[
                                     Text(
-                                        "Longitude",
+                                        "Latitude",
                                         weight=FontWeight.BOLD,
                                         size=20,
                                     ),
                                     Text(
-                                        "0",
+                                        f"{gps_latitude}",
                                         weight=FontWeight.BOLD,
                                         size=25,
                                     ),
@@ -128,12 +128,12 @@ def get_map(gps_altitude, gps_latitude, gps_longitude):
                             Row(
                                 controls=[
                                     Text(
-                                        "Longitude",
+                                        "Altitude",
                                         weight=FontWeight.BOLD,
                                         size=20,
                                     ),
                                     Text(
-                                        "0",
+                                        f"{gps_altitude} m",
                                         weight=FontWeight.BOLD,
                                         size=25,
                                     ),
@@ -142,12 +142,40 @@ def get_map(gps_altitude, gps_latitude, gps_longitude):
                             Row(
                                 controls=[
                                     Text(
-                                        "Longitude",
+                                        "Tilt X, Tilt Y",
                                         weight=FontWeight.BOLD,
                                         size=20,
                                     ),
                                     Text(
-                                        "0",
+                                        f"{0.00},{45.00}",
+                                        weight=FontWeight.BOLD,
+                                        size=25,
+                                    ),
+                                ]
+                            ),
+                            Row(
+                                controls=[
+                                    Text(
+                                        "Rot Z",
+                                        weight=FontWeight.BOLD,
+                                        size=20,
+                                    ),
+                                    Text(
+                                        f"{23.1} dgs",
+                                        weight=FontWeight.BOLD,
+                                        size=25,
+                                    ),
+                                ]
+                            ),
+                            Row(
+                                controls=[
+                                    Text(
+                                        "GPS Sats",
+                                        weight=FontWeight.BOLD,
+                                        size=20,
+                                    ),
+                                    Text(
+                                        f"{6}",
                                         weight=FontWeight.BOLD,
                                         size=25,
                                     ),
@@ -158,6 +186,7 @@ def get_map(gps_altitude, gps_latitude, gps_longitude):
                     Image(src="https://tile.openstreetmap.org/7/63/42.png"),
                 ],
                 alignment=MainAxisAlignment.CENTER,
+                spacing= 60
             ),
         ],
         alignment=MainAxisAlignment.START,

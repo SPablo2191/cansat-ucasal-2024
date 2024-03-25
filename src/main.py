@@ -63,6 +63,7 @@ def main(page: ft.Page):
                     controls=[header_panel, body_panel, console_panel],
                     alignment=ft.MainAxisAlignment.START,
                     expand=True,
+                    height=1150
                 ),
             ],
         )
