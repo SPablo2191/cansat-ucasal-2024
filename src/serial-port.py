@@ -1,26 +1,42 @@
-import serial
+import serial as serial
 
-# Configura el puerto serie
-puerto_serie = serial.Serial('COM8', 19200)  # Ajusta el nombre del puerto según tu configuración
+buffer = bytearray();
+telemetry = [];
 
+puerto_serie = serial.Serial('COM9', 19200)  
 try:
-    #puerto_serie.open()
+    
     while True:
-        if puerto_serie.in_waiting > 0:
-            data = puerto_serie.read()
-            print(f"Received data: {data}")
-        else:
-            # No data, you can choose to do something else here or just pass
-            pass
+        byteReaded = puerto_serie.read(1)[0]
+        if byteReaded == 0x7E:
+            buffer.clear()
+            telemetry.clear()
+        buffer.append(byteReaded)
+            
+        if len(buffer) >= 9:
+            buffer2 = buffer[2]
+            aux = buffer[2] + 0x04
+            if aux == len(buffer):  # pregunta si ya tenemos toda la trama dentro de buffer
+                message = ""
+                for i in range(8, len(buffer) - 1):
+                    message += chr(buffer[i])
+
+                print(message.strip().replace("NAN", "0"))
+                # Split message and send to CsvHelper class to create or append 
+                telemetry = message.split(',')
+                print('telemetry:' , telemetry)
+                # Cansat2021.CsvHelper.writeCsvFromList(telemetry, export)  # escribe los datos en un CSV file
+             
+        
 
 except KeyboardInterrupt:
-    # Maneja la interrupción del teclado (Ctrl+C)
+    # (Ctrl+C)
     print("Programa terminado por el usuario.")
 
 except Exception as e:
-    # Captura cualquier otro error y muestra un mensaje
+    
     print("Se ha producido un error:", e)
 
 finally:
-    # Cierra el puerto serie al finalizar
+    
     puerto_serie.close()
