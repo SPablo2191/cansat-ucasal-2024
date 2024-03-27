@@ -67,15 +67,18 @@ def get_charts(data):
                 controls=[
                     get_plot_chart(data, "Altitude (m)", "Time (s)"),
                     get_plot_chart(data, "Voltage (V)", "Time (s)"),
-                ]
+                ],
+                alignment=MainAxisAlignment.CENTER,
             ),
             Row(
                 controls=[
                     get_plot_chart(data, "Temperature (C°)", "Time (s)"),
                     get_plot_chart(data, "Air Speed (kPa)", "Time (s)"),
-                ]
+                ],
+                alignment=MainAxisAlignment.CENTER,
             ),
-        ]
+        ],
+        
     )
 
 
