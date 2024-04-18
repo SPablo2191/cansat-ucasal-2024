@@ -1,4 +1,5 @@
 import serial as serial
+from utils.csvHelper import write_to_csv
 
 buffer = bytearray();
 telemetry = [];
@@ -24,7 +25,7 @@ try:
                 print(message.strip().replace("NAN", "0"))
                 # Split message and send to CsvHelper class to create or append 
                 telemetry = message.split(',')
-                print('telemetry:' , telemetry)
+                write_to_csv(telemetry)
                 # Cansat2021.CsvHelper.writeCsvFromList(telemetry, export)  # escribe los datos en un CSV file
              
         
