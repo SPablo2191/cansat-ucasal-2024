@@ -5,7 +5,6 @@ from components.console_panel import get_console_panel
 from components.body_panel import get_body_panel, get_map, get_charts
 from models.ground_control_system_view_model import GroundControlSystemViewModel, State
 
-
 def main(page: ft.Page):
     # configuration
     groundControlSystemViewModel = GroundControlSystemViewModel()

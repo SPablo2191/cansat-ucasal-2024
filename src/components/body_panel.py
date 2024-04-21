@@ -83,9 +83,6 @@ def get_charts(data):
 
 
 def get_map(gps_altitude, gps_latitude, gps_longitude):
-    print(
-        f"http://a.tile.openstreetmap.org/{gps_altitude}/{gps_latitude}/{gps_longitude}.png"
-    )
     return Column(
         controls=[
             Row(
@@ -189,12 +186,13 @@ def get_map(gps_altitude, gps_latitude, gps_longitude):
                             ),
                         ]
                     ),
-                    Image(
-                        src="https://a.tile.openstreetmap.org/14/4523/6843.png",
-                        fit=ImageFit.NONE,
-                        repeat=ImageRepeat.NO_REPEAT,
-                        border_radius=border_radius.all(10),
-                    ),
+                    FletMap(
+                        expand = True,
+                        latitude= gps_latitude,
+                        longtitude= gps_longitude,
+                        zoom=int(gps_altitude),
+                        screenView= [3,2]
+                    )
                 ],
                 alignment=MainAxisAlignment.CENTER,
                 spacing=60,
