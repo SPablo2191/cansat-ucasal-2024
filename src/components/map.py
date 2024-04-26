@@ -52,6 +52,7 @@ class FletMap(Container):
         original_size: bool = False,
         transparent: bool = False,
     ):
+
         Container.__init__(
             self,
             ref=ref,
@@ -101,25 +102,20 @@ class FletMap(Container):
 
         xmin, ymax = self.deg2num(self.latitude, self.longtitude, self.zoom)
         xmax, ymin = self.deg2num(
-            self.latitude + self.delta_lat, self.longtitude + self.delta_long, self.zoom
-        )
-        self.__row = Row(
-            alignment=ft.MainAxisAlignment.CENTER, spacing=0, auto_scroll=True
-        )
+            self.latitude + self.delta_lat, self.longtitude + self.delta_long, self.zoom)
+        self.__row = Row(alignment=ft.MainAxisAlignment.CENTER,
+                         spacing=0, auto_scroll=True)
 
-        for xtile in range(xmin, xmax + self.screenView[0]):
+        for xtile in range(xmin, xmax+self.screenView[0]):
             self.__col = Column(
-                alignment=ft.MainAxisAlignment.CENTER, spacing=0, auto_scroll=True
-            )
+                alignment=ft.MainAxisAlignment.CENTER, spacing=0, auto_scroll=True)
             xtile
-            for ytile in range(ymin, ymax + self.screenView[1]):
+            for ytile in range(ymin,  ymax+self.screenView[1]):
                 try:
                     imgurl = smurl.format(self.zoom, xtile, ytile)
                     self.__col.controls.append(
-                        Image(
-                            src=imgurl,
-                        )
-                    )
+                        Image(src=imgurl,
+                              ))
                 except:
                     print("Couldn't download image")
             self.__row.controls.append(self.__col)
@@ -136,17 +132,14 @@ class FletMap(Container):
 
     def deg2num(self, lat_deg, lon_deg, zoom):
         lat_rad = math.radians(lat_deg)
-        n = 2.0**zoom
+        n = 2.0 ** zoom
         xtile = int((lon_deg + 180.0) / 360.0 * n)
-        ytile = int(
-            (1.0 - math.log(math.tan(lat_rad) + (1 / math.cos(lat_rad))) / math.pi)
-            / 2.0
-            * n
-        )
+        ytile = int((1.0 - math.log(math.tan(lat_rad) +
+                    (1 / math.cos(lat_rad))) / math.pi) / 2.0 * n)
         return (xtile, ytile)
 
     def num2deg(self, xtile, ytile, zoom):
-        n = 2.0**zoom
+        n = 2.0 ** zoom
         lon_deg = xtile / n * 360.0 - 180.0
         lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * ytile / n)))
         lat_deg = math.degrees(lat_rad)

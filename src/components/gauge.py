@@ -1,32 +1,46 @@
-import flet as ft
+from flet import (
+    Image,
+    ImageFit,
+    transform,
+    animation,
+    alignment,
+    AnimationCurve,
+    Stack,
+    Page,
+)
+import math
 
+def get_gauge(referent_value: str, page: Page):
+    def animate(e):
+        value = referent_value
+        if len(value) > 0:
+            current_value = int(value)
+            curr_degree = int(current_value * 3) + 210 % 360
+            if current_value <= 50:
+                pointer.rotate.angle = math.radians(curr_degree - 360)
+            else:
+                pointer.rotate.angle = math.radians(abs(curr_degree - 360))
+        else:
+            pointer.rotate.angle = math.radians(curr_degree - 360)
+        page.update()
 
-
-class Gauge:
-    def __init__(self):
-        self.value = "0"
-        self.pointer = ft.Image(
-            src="images/gauge_pointer.png",
-            fit=ft.ImageFit.CONTAIN,
-            rotate=ft.transform.Rotate(
-                -2.6179938779914944, alignment=ft.alignment.center
-            ),
-            animate_rotation=ft.animation.Animation(800, ft.AnimationCurve.DECELERATE),
-        )
-        self.gauge_background = ft.Image(
-            src="images/gauge.png",
-            fit=ft.ImageFit.CONTAIN,
-        )
-        self.gauge_cap = ft.Image(
-            src="images/gauge_cap.png",
-            fit=ft.ImageFit.CONTAIN,
-        )
-
-    def get_component(self):
-        return ft.Stack(
-            [self.gauge_background, self.pointer, self.gauge_cap],
-            width=350,
-            height=350,
-        )
-
-
+    value = "0"
+    pointer = Image(
+        src="images/gauge_pointer.png",
+        fit=ImageFit.CONTAIN,
+        rotate=transform.Rotate(-2.6179938779914944, alignment=alignment.center),
+        animate_rotation=animation.Animation(800, AnimationCurve.DECELERATE),
+    )
+    gauge_background = Image(
+        src="images/gauge.png",
+        fit=ImageFit.CONTAIN,
+    )
+    gauge_cap = Image(
+        src="images/gauge_cap.png",
+        fit=ImageFit.CONTAIN,
+    )
+    return Stack(
+        [gauge_background, pointer, gauge_cap],
+        width=350,
+        height=350,
+    )

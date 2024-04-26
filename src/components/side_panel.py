@@ -33,6 +33,8 @@ def get_side_panel(
     heat_shield: bool,
     simulation_mode: bool,
     page: Page,
+    map_click,
+    chart_click
 ) -> Container:
     button_width = 180
     background_color = "#6B9CC9"
@@ -47,16 +49,18 @@ def get_side_panel(
                 get_mission_time(mission_time=mission_time),
                 get_horizontal_line(),
                 ElevatedButton(
-                    "Graph",
+                    "Charts",
                     icon=icons.AUTO_GRAPH_ROUNDED,
                     style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
                     width=button_width,
+                    on_click=chart_click
                 ),
                 ElevatedButton(
                     "Map",
                     icon=icons.MAP_ROUNDED,
                     style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
                     width=button_width,
+                    on_click=map_click
                 ),
                 get_horizontal_line(),
                 Column(
@@ -107,6 +111,7 @@ def get_side_panel(
                 ),
             ],
             horizontal_alignment=CrossAxisAlignment.CENTER,
+            alignment=MainAxisAlignment.START
         ),
         padding=padding.symmetric(10, 30),
         alignment=alignment.center,
@@ -118,6 +123,7 @@ def get_side_panel(
             offset=Offset(0, 0),
             blur_style=ShadowBlurStyle.OUTER,
         ),
+        height=1150
     )
 
 
