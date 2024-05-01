@@ -16,26 +16,64 @@ from flet import (
     ElevatedButton,
     icons,
     ButtonStyle,
-    MainAxisAlignment
+    MainAxisAlignment,
+    Page
 )
+from time import sleep
 
-
-def get_header_panel(
-    state: str, packet_count: int, temperature: float, pressure: float, voltage: float
-) -> Container:
-    return Container(
+class HeaderPanel:
+    def __init__(
+        self,
+        state: str,
+        packet_count: int,
+        temperature: float,
+        pressure: float,
+        voltage: float,
+        page : Page
+    ) -> None:
+        button_width = 180
+        background_color = "#6B9CC9"
+        self.page = page
+        self.state = self.get_state()
+        self.packet_count = self.get_data(label="Packet Count", value=str(packet_count))
+        self.temperature = self.get_data(label="Temperature", value=f"{temperature} °C")
+        self.pressure = self.get_data(label="Pressure", value=f"{pressure} kPa")
+        self.voltage = self.get_data(label="Voltage", value=f"{voltage}V")
+        self.serials = self.get_serial_port_options()
+        self.disconnect_button = ElevatedButton(
+                    "DISCONNECT",
+                    disabled=True,
+                    icon=icons.LOGOUT_ROUNDED,
+                    style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
+                    width=button_width,
+                )
+        self.connect_button = ElevatedButton(
+                    "CONNECT",
+                    disabled=False,
+                    icon=icons.LOGIN_ROUNDED,
+                    style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
+                    width=button_width,
+                )
+        self.button_wrapper = Column(
+            controls=[
+                self.connect_button,
+                self.disconnect_button,
+            ],
+            horizontal_alignment=CrossAxisAlignment.CENTER,
+        )
+        self.content = Container(
         content=Row(
             controls=[
-                get_state(),
-                get_data(label="Packet Count", value=str(packet_count)),
-                get_data(label="Temperature", value=f"{temperature} °C"),
-                get_data(label="Pressure", value=f"{pressure} kPa"),
-                get_data(label="Voltage", value=f"{voltage}V"),
-                get_serial_port_options(),
-                get_connection_buttons()
+                self.state,
+                self.packet_count,
+                self.temperature,
+                self.pressure,
+                self.voltage,
+                self.serials,
+                self.button_wrapper,
             ],
             spacing=40,
-            alignment=MainAxisAlignment.CENTER
+            alignment=MainAxisAlignment.CENTER,
         ),
         padding=padding.symmetric(10, 30),
         alignment=alignment.center,
@@ -49,63 +87,44 @@ def get_header_panel(
         ),
     )
 
+    def get_state(self):
+        return Column(
+            controls=[
+                Text("State"),
+            ],
+            horizontal_alignment=CrossAxisAlignment.CENTER,
+        )
 
-def get_state():
-    return Column(
-        controls=[
-            Text("State"),
-        ],
-        horizontal_alignment=CrossAxisAlignment.CENTER,
+    def get_data(self, label: str, value: str):
+        return Column(
+            controls=[
+                Text(label, weight=FontWeight.BOLD),
+                Text(value, weight=FontWeight.BOLD, size=20),
+            ],
+            horizontal_alignment=CrossAxisAlignment.CENTER,
+        )
+
+    def get_serial_port_options(self):
+        return Column(
+            controls=[
+                Text("Serial Port", weight=FontWeight.BOLD),
+                Dropdown(
+                    hint_text="Choose a port...",
+                    width=200,
+                    options=[
+                        dropdown.Option("Red"),
+                        dropdown.Option("Green"),
+                        dropdown.Option("Blue"),
+                    ],
+                ),
+            ],
+            horizontal_alignment=CrossAxisAlignment.CENTER,
     )
+    def packet_increase(self):
+        while True:
+            print("hola")
+            sleep(1)
+
+    
 
 
-def get_data(label: str, value: str):
-    return Column(
-        controls=[
-            Text(label, weight=FontWeight.BOLD),
-            Text(value, weight=FontWeight.BOLD, size=20),
-        ],
-        horizontal_alignment=CrossAxisAlignment.CENTER,
-    )
-
-
-def get_serial_port_options():
-    return Column(
-        controls=[
-            Text("Serial Port", weight=FontWeight.BOLD),
-            Dropdown(
-                hint_text="Choose a port...",
-                width=200,
-                options=[
-                    dropdown.Option("Red"),
-                    dropdown.Option("Green"),
-                    dropdown.Option("Blue"),
-                ],
-            ),
-        ],
-        horizontal_alignment=CrossAxisAlignment.CENTER,
-    )
-
-
-def get_connection_buttons():
-    button_width = 180
-    background_color = "#6B9CC9"
-    return Column(
-        controls=[
-            ElevatedButton(
-                "DISCONNECT",
-                disabled=True,
-                icon=icons.LOGOUT_ROUNDED,
-                style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
-                width=button_width,
-            ),
-            ElevatedButton(
-                "CONNECT",
-                disabled=False,
-                icon=icons.LOGIN_ROUNDED,
-                style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
-                width=button_width,
-            ),
-        ],
-        horizontal_alignment=CrossAxisAlignment.CENTER,
-    )

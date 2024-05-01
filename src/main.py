@@ -1,8 +1,10 @@
 import flet as ft
-from time import sleep
-from components.side_panel import SidePanel
 
-from components.header_panel import get_header_panel
+from time import sleep
+import threading
+
+from components.side_panel import SidePanel
+from components.header_panel import HeaderPanel
 from components.console_panel import get_console_panel
 from components.body_panel import get_body_panel, get_map, get_charts
 from models.ground_control_system_view_model import GroundControlSystemViewModel, State
@@ -29,6 +31,7 @@ def main(page: ft.Page):
     def go_to_map(e):
         body_panel.content.content = map_panel
         page.update()
+
     def stop_watch(e):
         seconds = minutes = hours = 0
         while True:
@@ -40,10 +43,20 @@ def main(page: ft.Page):
             else:
                 hours += 1
                 minutes = 0
-            side_panel.mission_time.controls[0].value = f"{hours:02}:{minutes:02}:{seconds:02}"
+            side_panel.mission_time.controls[0].value = (
+                f"{hours:02}:{minutes:02}:{seconds:02}"
+            )
             sleep(1)
             side_panel.mission_time.controls[0].update()
 
+    def connect(e):
+        # counter_thread = threading.Thread(target=stop_watch(e))
+        packet_thread = threading.Thread(target=header_panel.packet_increase)
+        # counter_thread.setDaemon(True)
+        packet_thread.setDaemon(True)
+        # counter_thread.start()
+        packet_thread.start()
+        
 
     # Components
     side_panel = SidePanel(
@@ -54,19 +67,23 @@ def main(page: ft.Page):
         simulation_mode=groundControlSystemViewModel.state == State.SIMULATION,
         page=page,
     )
-    side_panel.export_button.on_click = stop_watch
     side_panel.charts_button.on_click = go_to_chart
     side_panel.map_button.on_click = go_to_map
 
-    header_panel = get_header_panel(
+    header_panel = HeaderPanel(
         state=groundControlSystemViewModel.state,
         packet_count=groundControlSystemViewModel.packet_count,
         temperature=groundControlSystemViewModel.temperature,
         pressure=groundControlSystemViewModel.pressure,
         voltage=groundControlSystemViewModel.voltage,
+        page=page,
     )
+    header_panel.connect_button.on_click = connect
+
     body_panel = get_body_panel(data=groundControlSystemViewModel.data_points_example)
+
     chart_panel = get_charts(data=groundControlSystemViewModel.data_points_example)
+
     map_panel = get_map(
         gps_altitude=groundControlSystemViewModel.gps_altitude,
         gps_latitude=groundControlSystemViewModel.gps_latitude,
@@ -82,7 +99,7 @@ def main(page: ft.Page):
             controls=[
                 side_panel.content,
                 ft.Column(
-                    controls=[header_panel, body_panel, console_panel],
+                    controls=[header_panel.content, body_panel, console_panel],
                     alignment=ft.MainAxisAlignment.START,
                     expand=True,
                     height=1150,

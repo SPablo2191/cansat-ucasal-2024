@@ -47,6 +47,7 @@ class SidePanel:
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
         )
+
         self.map_button = ElevatedButton(
             "Map",
             icon=icons.MAP_ROUNDED,
@@ -55,7 +56,9 @@ class SidePanel:
         )
 
         self.telemety_switch = Switch(value=telemetry, label="Telemetry")
+
         self.heat_shield_switch = Switch(value=heat_shield, label="Heat Shield")
+
         self.simulation_mode_switch = Switch(
             value=simulation_mode, label="Simulation Mode"
         )
@@ -66,12 +69,14 @@ class SidePanel:
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
         )
+
         self.sim_activate_button = ElevatedButton(
             "Sim. Activate",
             icon=icons.BROADCAST_ON_HOME_OUTLINED,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
         )
+
         self.parachute_button = ElevatedButton(
             "Parachute",
             icon=icons.PARAGLIDING,
@@ -85,6 +90,7 @@ class SidePanel:
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
         )
+        
         self.content = Container(
             content=Column(
                 controls=[
