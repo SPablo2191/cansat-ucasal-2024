@@ -1,6 +1,10 @@
 import flet as ft
-from components.side_panel import get_side_panel
-from components.header_panel import get_header_panel
+
+from time import sleep
+import threading
+
+from components.side_panel import SidePanel
+from components.header_panel import HeaderPanel
 from components.console_panel import get_console_panel
 from components.body_panel import get_body_panel, get_map, get_charts
 from models.ground_control_system_view_model import GroundControlSystemViewModel, State
@@ -12,21 +16,57 @@ def main(page: ft.Page):
     page.title = groundControlSystemViewModel.system_name
     page.fonts = {"inria sans": "fonts/inria-sans.ttf"}
     page.theme = ft.Theme(font_family="inria sans")
+    page.theme_mode = "light"
     page.padding = 20
     page.scroll = ft.ScrollMode.HIDDEN
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.splash = ft.ProgressBar(visible=False)
 
+    # Functions
+
+    def go_to_chart(e):
+        body_panel.content.content = chart_panel
+        page.update()
+
+    def go_to_map(e):
+        body_panel.content.content = map_panel
+        page.update()
+
+    def connect(e):
+        counter_thread = threading.Thread(target=side_panel.stop_watch)
+        packet_thread = threading.Thread(target=header_panel.packet_increase)
+        counter_thread.setDaemon(True)
+        packet_thread.setDaemon(True)
+        counter_thread.start()
+        packet_thread.start()
+        
+
     # Components
-    header_panel = get_header_panel(
+    side_panel = SidePanel(
+        team_id=groundControlSystemViewModel.team_id,
+        mission_time=groundControlSystemViewModel.mission_time,
+        telemetry=groundControlSystemViewModel.telemetry,
+        heat_shield=groundControlSystemViewModel.hs_deployed,
+        simulation_mode=groundControlSystemViewModel.state == State.SIMULATION,
+        page=page,
+    )
+    side_panel.charts_button.on_click = go_to_chart
+    side_panel.map_button.on_click = go_to_map
+
+    header_panel = HeaderPanel(
         state=groundControlSystemViewModel.state,
         packet_count=groundControlSystemViewModel.packet_count,
         temperature=groundControlSystemViewModel.temperature,
         pressure=groundControlSystemViewModel.pressure,
         voltage=groundControlSystemViewModel.voltage,
+        page=page,
     )
+    header_panel.connect_button.on_click = connect
+
     body_panel = get_body_panel(data=groundControlSystemViewModel.data_points_example)
+
     chart_panel = get_charts(data=groundControlSystemViewModel.data_points_example)
+
     map_panel = get_map(
         gps_altitude=groundControlSystemViewModel.gps_altitude,
         gps_latitude=groundControlSystemViewModel.gps_latitude,
@@ -37,30 +77,12 @@ def main(page: ft.Page):
         received_data=groundControlSystemViewModel.received_data,
     )
 
-    def go_to_chart(e):
-        body_panel.content.content = chart_panel
-        page.update()
-
-    def go_to_map(e):
-        body_panel.content.content = map_panel
-        page.update()
-
-    side_panel = get_side_panel(
-        team_id=groundControlSystemViewModel.team_id,
-        mission_time=groundControlSystemViewModel.mission_time,
-        telemetry=groundControlSystemViewModel.telemetry,
-        heat_shield=groundControlSystemViewModel.hs_deployed,
-        simulation_mode=groundControlSystemViewModel.state == State.SIMULATION,
-        page=page,
-        map_click=go_to_map,
-        chart_click=go_to_chart,
-    )
     page.add(
         ft.Row(
             controls=[
-                side_panel,
+                side_panel.content,
                 ft.Column(
-                    controls=[header_panel, body_panel, console_panel],
+                    controls=[header_panel.content, body_panel, console_panel],
                     alignment=ft.MainAxisAlignment.START,
                     expand=True,
                     height=1150,
