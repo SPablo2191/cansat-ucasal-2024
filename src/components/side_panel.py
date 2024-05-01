@@ -22,9 +22,9 @@ from flet import (
     IconButton,
     Page,
 )
+from time import sleep
 from .horizontal_line import get_horizontal_line
 from .change_theme_button import get_change_theme_button
-
 
 class SidePanel:
     def __init__(
@@ -90,7 +90,7 @@ class SidePanel:
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
         )
-        
+
         self.content = Container(
             content=Column(
                 controls=[
@@ -185,6 +185,22 @@ class SidePanel:
             icon_size=30,
             tooltip="Github Repository",
         )
+    def stop_watch(self):
+        seconds = minutes = hours = 0
+        while True:
+            if seconds != 59:
+                seconds += 1
+            elif minutes != 59:
+                minutes += 1
+                seconds = 0
+            else:
+                hours += 1
+                minutes = 0
+            self.mission_time.controls[0].value = (
+                f"{hours:02}:{minutes:02}:{seconds:02}"
+            )
+            sleep(1)
+            self.mission_time.controls[0].update()
     
 
 

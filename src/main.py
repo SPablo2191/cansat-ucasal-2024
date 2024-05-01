@@ -32,29 +32,12 @@ def main(page: ft.Page):
         body_panel.content.content = map_panel
         page.update()
 
-    def stop_watch(e):
-        seconds = minutes = hours = 0
-        while True:
-            if seconds != 59:
-                seconds += 1
-            elif minutes != 59:
-                minutes += 1
-                seconds = 0
-            else:
-                hours += 1
-                minutes = 0
-            side_panel.mission_time.controls[0].value = (
-                f"{hours:02}:{minutes:02}:{seconds:02}"
-            )
-            sleep(1)
-            side_panel.mission_time.controls[0].update()
-
     def connect(e):
-        # counter_thread = threading.Thread(target=stop_watch(e))
+        counter_thread = threading.Thread(target=side_panel.stop_watch)
         packet_thread = threading.Thread(target=header_panel.packet_increase)
-        # counter_thread.setDaemon(True)
+        counter_thread.setDaemon(True)
         packet_thread.setDaemon(True)
-        # counter_thread.start()
+        counter_thread.start()
         packet_thread.start()
         
 
