@@ -1,12 +1,10 @@
 import flet as ft
-
-from time import sleep
 import threading
 
 from components.side_panel import SidePanel
 from components.header_panel import HeaderPanel
 from components.console_panel import ConsolePanel
-from components.body_panel import get_body_panel, get_map, get_charts
+from components.body_panel import BodyPanel
 from models.ground_control_system_view_model import GroundControlSystemViewModel, State
 
 
@@ -25,12 +23,10 @@ def main(page: ft.Page):
     # Functions
 
     def go_to_chart(e):
-        body_panel.content.content = chart_panel
-        page.update()
+        body_panel.set_charts()
 
     def go_to_map(e):
-        body_panel.content.content = map_panel
-        page.update()
+        body_panel.set_maps()
 
     def connect(e):
         counter_thread = threading.Thread(target=side_panel.stop_watch)
@@ -39,9 +35,15 @@ def main(page: ft.Page):
         packet_thread.setDaemon(True)
         counter_thread.start()
         packet_thread.start()
-        
 
     # Components
+    body_panel = BodyPanel(
+        data=groundControlSystemViewModel.data_points_example,
+        gps_altitude=groundControlSystemViewModel.gps_altitude,
+        gps_latitude=groundControlSystemViewModel.gps_latitude,
+        gps_longitude=groundControlSystemViewModel.gps_longitude,
+        page=page,
+    )
     side_panel = SidePanel(
         team_id=groundControlSystemViewModel.team_id,
         mission_time=groundControlSystemViewModel.mission_time,
@@ -63,15 +65,7 @@ def main(page: ft.Page):
     )
     header_panel.connect_button.on_click = connect
 
-    body_panel = get_body_panel(data=groundControlSystemViewModel.data_points_example)
 
-    chart_panel = get_charts(data=groundControlSystemViewModel.data_points_example)
-
-    map_panel = get_map(
-        gps_altitude=groundControlSystemViewModel.gps_altitude,
-        gps_latitude=groundControlSystemViewModel.gps_latitude,
-        gps_longitude=groundControlSystemViewModel.gps_longitude,
-    )
     console_panel = ConsolePanel(
         command=groundControlSystemViewModel.command,
         received_data=groundControlSystemViewModel.received_data,
@@ -82,7 +76,7 @@ def main(page: ft.Page):
             controls=[
                 side_panel.content,
                 ft.Column(
-                    controls=[header_panel.content, body_panel, console_panel.content],
+                    controls=[header_panel.content, body_panel.content, console_panel.content],
                     alignment=ft.MainAxisAlignment.START,
                     expand=True,
                     height=1150,
