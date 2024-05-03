@@ -20,7 +20,7 @@ def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.splash = ft.ProgressBar(visible=False)
 
-    # Functions
+    # Functions (Events)
 
     def go_to_chart(e):
         body_panel.set_charts()
@@ -70,7 +70,7 @@ def main(page: ft.Page):
         command=groundControlSystemViewModel.command,
         received_data=groundControlSystemViewModel.received_data,
     )
-
+    # Page structure
     page.add(
         ft.Row(
             controls=[
