@@ -86,6 +86,10 @@ class HeaderPanel:
             blur_style=ShadowBlurStyle.OUTER,
         ),
     )
+    # packet 
+    def set_packet(self,value : int):
+        self.packet_count.controls[1].value = value
+        self.packet_count.controls[1].update()
 
     def get_state(self):
         return Column(
