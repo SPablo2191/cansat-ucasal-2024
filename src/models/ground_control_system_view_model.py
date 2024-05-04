@@ -75,6 +75,8 @@ class GroundControlSystemViewModel:
 
     def serial(self):
         packet = 0
+        altitude = 1.0
+        time = 1
         while True:
             # llega la trama
             new_plot = [
@@ -83,7 +85,7 @@ class GroundControlSystemViewModel:
                 str(packet), # packet 2
                 str(True), # MODE 3
                 State.SIMULATION.value, # State 4
-                str(uniform(1.0,900.0)), # altitude 5
+                str(altitude), # altitude 5
                 str(uniform(1.0,200.0)), # air speed 6
                 str(randint(0,1)),# heat shield 7
                 str(randint(0,1)), # parachute 8
@@ -109,7 +111,9 @@ class GroundControlSystemViewModel:
             self.header_panel.set_pressure(float(new_plot[11]))
             # console
             self.console_panel.set_received(' ; '.join(new_plot))
-            self.data_points_example.append(ft.LineChartDataPoint(randint(1,100),new_plot[5]))
+            self.data_points_example.append(ft.LineChartDataPoint(time,new_plot[5]))
             self.body_panel.update_chart(self.data_points_example)
             packet += 1
+            altitude += 0.5
+            time += 1
             sleep(1)
