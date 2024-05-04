@@ -16,12 +16,9 @@ from flet import (
     AnimatedSwitcherTransition,
     AnimationCurve,
     CrossAxisAlignment,
-    Image,
-    ImageFit,
-    ImageRepeat,
-    border_radius,
     Page,
-    LineChartDataPoint
+    LineChartDataPoint,
+    LineChartData
 )
 from .chart import get_plot_chart
 from .map import FletMap
@@ -132,8 +129,16 @@ class BodyPanel:
             ],
         )
     def update_chart(self,data: list[LineChartDataPoint]):
-        print(data)
-        self.altitude_chart.data_series = data
+        chart_data = [
+        LineChartData(
+            data_points=data,
+            color= colors.CYAN,
+            stroke_width=5,
+            curved=True,
+            stroke_cap_round=True,
+        )
+    ]
+        self.altitude_chart.data_series = chart_data
         self.altitude_chart.max_y = max(point.y for point in data)
         self.altitude_chart.max_x = max(point.x for point in data)
         self.altitude_chart.update()
