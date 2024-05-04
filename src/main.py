@@ -27,17 +27,12 @@ def main(page: ft.Page):
         counter_thread = threading.Thread(
             target=groundControlSystemViewModel.side_panel.stop_watch
         )
-        packet_thread = threading.Thread(
-            target=groundControlSystemViewModel.header_panel.packet_increase
-        )
         serial_thread = threading.Thread(
             target= groundControlSystemViewModel.serial
         )
         counter_thread.setDaemon(True)
-        packet_thread.setDaemon(True)
         serial_thread.setDaemon(True)
         counter_thread.start()
-        packet_thread.start()
         serial_thread.start()
 
     # Components (Events)

@@ -26,8 +26,8 @@ class GroundControlSystemViewModel:
         self.hs_deployed = False  # heatshield state
         self.pc_deployed = False  # parachute state
         self.temperature = 23.0
-        self.voltage = 5.0
-        self.pressure = 20.0
+        self.voltage = 0
+        self.pressure = 0
         self.gps_time = "00:00:00"
         self.gps_altitude = 14.0
         self.gps_latitude = 28.3882648
@@ -40,13 +40,7 @@ class GroundControlSystemViewModel:
         self.received_data = ""
         self.command = ""
         self.data_points_example = [
-            ft.LineChartDataPoint(1, 1),
-            ft.LineChartDataPoint(3, 3),
-            ft.LineChartDataPoint(5, 4),
-            ft.LineChartDataPoint(7, 4),
-            ft.LineChartDataPoint(10, 2),
-            ft.LineChartDataPoint(12, 2),
-            ft.LineChartDataPoint(13, 8),
+            ft.LineChartDataPoint(0,0)
         ]
         self.telemetry = False
         self.page = page
@@ -84,29 +78,38 @@ class GroundControlSystemViewModel:
         while True:
             # llega la trama
             new_plot = [
-                '2030',
-                str(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")),
-                str(packet),
-                str(True),
-                State.SIMULATION.value,
-                str(uniform(1.0,900.0)), # altitude
-                str(uniform(1.0,200.0)), # air speed
-                str(randint(0,1)),
-                str(randint(0,1)),
-                str(uniform(1.0,100.0)), # temperature
-                str(uniform(1,5)), # voltage
-                str(uniform(1.0,100.0)),
-                str(datetime.now().strftime("%H:%M:%S")),
-                str(uniform(1.0,200.0)),
-                str(uniform(1.0,200.0)),
-                str(uniform(1.0,200.0)),
-                str(uniform(1.0,200.0)),
-                str(uniform(1.0,200.0)),
-                str(uniform(1.0,200.0)),
-                str(uniform(1.0,200.0)),
-                'comando'
+                '2030', # team_Id 0
+                str(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")), # mission time 1
+                str(packet), # packet 2
+                str(True), # MODE 3
+                State.SIMULATION.value, # State 4
+                str(uniform(1.0,900.0)), # altitude 5
+                str(uniform(1.0,200.0)), # air speed 6
+                str(randint(0,1)),# heat shield 7
+                str(randint(0,1)), # parachute 8
+                str(uniform(1.0,100.0)), # temperature 9
+                str(uniform(1,5)), # voltage 10 
+                str(uniform(1.0,100.0)), # pressure 11
+                str(datetime.now().strftime("%H:%M:%S")), # gps time 12
+                str(uniform(1.0,200.0)), # gps altitude 13
+                str(uniform(1.0,200.0)), # latitude 14
+                str(uniform(1.0,200.0)), # longitude 15
+                str(uniform(1.0,200.0)), # sats 16
+                str(uniform(1.0,200.0)), # tilt X 17
+                str(uniform(1.0,200.0)), # tilt y 18
+                str(uniform(1.0,200.0)), # rot z 19
+                'comando' # cmd echo 20
             ]
             print(new_plot)
-            self.header_panel.set_packet(int(new_plot[2]))
+            # header 
+            self.header_panel.set_state(new_plot[4])
+            self.header_panel.set_packet(int(new_plot[2])) 
+            self.header_panel.set_temperature(float(new_plot[9]))
+            self.header_panel.set_voltage(float(new_plot[10]))
+            self.header_panel.set_pressure(float(new_plot[11]))
+            # console
+            self.console_panel.set_received(' ; '.join(new_plot))
+            self.data_points_example.append(ft.LineChartDataPoint(randint(1,100),new_plot[5]))
+            self.body_panel.update_chart(self.data_points_example)
             packet += 1
             sleep(1)

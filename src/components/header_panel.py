@@ -34,7 +34,7 @@ class HeaderPanel:
         button_width = 180
         background_color = "#6B9CC9"
         self.page = page
-        self.state = self.get_state()
+        self.state = self.get_data(label="State", value=state)
         self.packet_count = self.get_data(label="Packet Count", value=str(packet_count))
         self.temperature = self.get_data(label="Temperature", value=f"{temperature} °C")
         self.pressure = self.get_data(label="Pressure", value=f"{pressure} kPa")
@@ -86,18 +86,27 @@ class HeaderPanel:
             blur_style=ShadowBlurStyle.OUTER,
         ),
     )
+    # state
+    def set_state(self,value : str):
+        self.state.controls[1].value = value
+        self.state.controls[1].update()
     # packet 
     def set_packet(self,value : int):
         self.packet_count.controls[1].value = value
         self.packet_count.controls[1].update()
+    # temperature
+    def set_temperature(self,value : float):
+        self.temperature.controls[1].value = f"{round(value,2)} °C"
+        self.temperature.controls[1].update()
+    # pressure
+    def set_pressure(self,value : float):
+        self.pressure.controls[1].value = f"{round(value,2)} kPa"
+        self.pressure.controls[1].update()
+    # temperature
+    def set_voltage(self,value : float):
+        self.voltage.controls[1].value = f"{round(value, 2)}V"
+        self.voltage.controls[1].update()
 
-    def get_state(self):
-        return Column(
-            controls=[
-                Text("State"),
-            ],
-            horizontal_alignment=CrossAxisAlignment.CENTER,
-        )
 
     def get_data(self, label: str, value: str):
         return Column(
@@ -124,10 +133,7 @@ class HeaderPanel:
             ],
             horizontal_alignment=CrossAxisAlignment.CENTER,
     )
-    def packet_increase(self):
-        while True:
-            print("hola")
-            sleep(1)
+
 
     
 

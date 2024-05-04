@@ -20,7 +20,8 @@ from flet import (
     ImageFit,
     ImageRepeat,
     border_radius,
-    Page
+    Page,
+    LineChartDataPoint
 )
 from .chart import get_plot_chart
 from .map import FletMap
@@ -130,7 +131,13 @@ class BodyPanel:
                 ),
             ],
         )
-
+    def update_chart(self,data: list[LineChartDataPoint]):
+        print(data)
+        self.altitude_chart.data_series = data
+        self.altitude_chart.max_y = max(point.y for point in data)
+        self.altitude_chart.max_x = max(point.x for point in data)
+        self.altitude_chart.update()
+        self.page.update()
 
     def get_map(self):
         return Column(

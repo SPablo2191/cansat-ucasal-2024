@@ -66,5 +66,8 @@ class ConsolePanel:
             blur_style=ShadowBlurStyle.OUTER,
         ),
     )
+    def set_received(self,value : str):
+        self.txt_received.value = value
+        self.txt_received.update()
         
 
