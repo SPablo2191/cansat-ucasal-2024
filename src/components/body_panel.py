@@ -89,11 +89,11 @@ class BodyPanel:
                 blur_style=ShadowBlurStyle.OUTER,
             ),
         )
-    def set_charts(self):
+    def set_charts(self,e):
         self.map_container.visible = False
         self.chart_container.visible = True
         self.page.update()
-    def set_maps(self):
+    def set_maps(self,e):
         self.chart_container.visible = False
         self.map_container.visible = True
         self.page.update()

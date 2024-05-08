@@ -1,6 +1,6 @@
 import flet as ft
 import threading
-from models.ground_control_system_view_model import GroundControlSystemViewModel, State
+from models.ground_control_system_view_model import GroundControlSystemViewModel
 
 
 def main(page: ft.Page):
@@ -16,30 +16,35 @@ def main(page: ft.Page):
     page.splash = ft.ProgressBar(visible=False)
 
     # Functions (Events)
-
-    def go_to_chart(e):
-        groundControlSystemViewModel.body_panel.set_charts()
-
-    def go_to_map(e):
-        groundControlSystemViewModel.body_panel.set_maps()
-
     def connect(e):
-        counter_thread = threading.Thread(
+        if not groundControlSystemViewModel.telemetry:
+            groundControlSystemViewModel.telemetry = True
+            groundControlSystemViewModel.side_panel.set_telemetry_switch(e)
+            groundControlSystemViewModel.side_panel.set_simulation_switch(e)
+            groundControlSystemViewModel.side_panel.mission_in_progress = True
+            groundControlSystemViewModel.header_panel.change_telemetry_button(e)
+            counter_thread = threading.Thread(
             target=groundControlSystemViewModel.side_panel.stop_watch
-        )
-        serial_thread = threading.Thread(
-            target= groundControlSystemViewModel.serial
-        )
-        counter_thread.setDaemon(True)
-        serial_thread.setDaemon(True)
-        counter_thread.start()
-        serial_thread.start()
+            )
+            serial_thread = threading.Thread(
+                target= groundControlSystemViewModel.serial
+            )
+            counter_thread.setDaemon(True)
+            serial_thread.setDaemon(True)
+            counter_thread.start()
+            serial_thread.start()
+        else:
+            groundControlSystemViewModel.telemetry = False
+            groundControlSystemViewModel.side_panel.mission_in_progress = False
+            groundControlSystemViewModel.header_panel.change_telemetry_button(e)
+            groundControlSystemViewModel.side_panel.set_telemetry_switch(e)
+            groundControlSystemViewModel.side_panel.set_simulation_switch(e)
 
     # Components (Events)
 
-    groundControlSystemViewModel.side_panel.charts_button.on_click = go_to_chart
-    groundControlSystemViewModel.side_panel.map_button.on_click = go_to_map
-    groundControlSystemViewModel.header_panel.connect_button.on_click = connect
+    groundControlSystemViewModel.side_panel.charts_button.on_click = groundControlSystemViewModel.body_panel.set_charts
+    groundControlSystemViewModel.side_panel.map_button.on_click = groundControlSystemViewModel.body_panel.set_maps
+    groundControlSystemViewModel.header_panel.telemetry_button.on_click = connect
 
     # Page structure
     page.add(

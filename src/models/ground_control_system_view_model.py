@@ -86,7 +86,7 @@ class GroundControlSystemViewModel:
         packet = 0
         altitude = 1.0
         time = 1
-        while True:
+        while self.telemetry:
             # llega la trama
             new_plot = [
                 '2030', # team_Id 0
