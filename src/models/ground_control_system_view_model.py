@@ -135,17 +135,19 @@ class GroundControlSystemViewModel:
             self.body_panel.update_air_speed_chart(self.air_speed_data_points)
 
             # maps
-            self.body_panel.altitude.value = new_plot[13]
-            self.body_panel.latitude.value = new_plot[14]
-            self.body_panel.longitude.value = new_plot[15]
-            self.body_panel.gps_sat.value = new_plot[16]
-            self.body_panel.tilt_x_tilt_y.value = f"{new_plot[17]},{new_plot[18]}"
+            self.body_panel.altitude.value = f"{round(float(new_plot[13]),2)}"
+            self.body_panel.latitude.value = f"{round(float(new_plot[14]),7)}"
+            self.body_panel.longitude.value = f"{round(float(new_plot[15]),7)}"
+            self.body_panel.gps_sat.value = f"{round(float(new_plot[16]),2)}"
+            self.body_panel.tilt_x_tilt_y.value = f"{round(float(new_plot[17]),2)},{round(float(new_plot[18]),2)}"
+            self.body_panel.rot_z.value = f"{new_plot[19]:02}"
 
             self.body_panel.altitude.update()
             self.body_panel.latitude.update()
             self.body_panel.longitude.update()
             self.body_panel.gps_sat.update()
             self.body_panel.tilt_x_tilt_y.update()
+            self.body_panel.rot_z.update()
 
             # self.body_panel.map.latitude = float(new_plot[14])
             # self.body_panel.map.longitude =float(new_plot[14])
