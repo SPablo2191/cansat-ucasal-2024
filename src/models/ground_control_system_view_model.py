@@ -39,14 +39,23 @@ class GroundControlSystemViewModel:
         self.cmd_echo = ""
         self.received_data = ""
         self.command = ""
-        self.data_points_example = [
+        self.altitude_data_points = [
+            ft.LineChartDataPoint(0,0)
+        ]
+        self.voltage_data_points = [
+            ft.LineChartDataPoint(0,0)
+        ]
+        self.temperature_data_points = [
+            ft.LineChartDataPoint(0,0)
+        ]
+        self.air_speed_data_points = [
             ft.LineChartDataPoint(0,0)
         ]
         self.telemetry = False
         self.page = page
         # Components
         self.body_panel = BodyPanel(
-            data=self.data_points_example,
+            data=self.altitude_data_points,
             gps_altitude=self.gps_altitude,
             gps_latitude=self.gps_latitude,
             gps_longitude=self.gps_longitude,
@@ -111,8 +120,38 @@ class GroundControlSystemViewModel:
             self.header_panel.set_pressure(float(new_plot[11]))
             # console
             self.console_panel.set_received(' ; '.join(new_plot))
-            self.data_points_example.append(ft.LineChartDataPoint(time,new_plot[5]))
-            self.body_panel.update_chart(self.data_points_example)
+            # body 
+            # Charts 
+            self.altitude_data_points.append(ft.LineChartDataPoint(time,new_plot[5]))
+            self.body_panel.update_altitude_chart(self.altitude_data_points)
+
+            self.temperature_data_points.append(ft.LineChartDataPoint(time,new_plot[9]))
+            self.body_panel.update_temperature_chart(self.temperature_data_points)
+
+            self.voltage_data_points.append(ft.LineChartDataPoint(time,new_plot[10]))
+            self.body_panel.update_voltage_chart(self.voltage_data_points)
+
+            self.air_speed_data_points.append(ft.LineChartDataPoint(time,new_plot[11]))
+            self.body_panel.update_air_speed_chart(self.air_speed_data_points)
+
+            # maps
+            self.body_panel.altitude.value = new_plot[13]
+            self.body_panel.latitude.value = new_plot[14]
+            self.body_panel.longitude.value = new_plot[15]
+            self.body_panel.gps_sat.value = new_plot[16]
+            self.body_panel.tilt_x_tilt_y.value = f"{new_plot[17]},{new_plot[18]}"
+
+            self.body_panel.altitude.update()
+            self.body_panel.latitude.update()
+            self.body_panel.longitude.update()
+            self.body_panel.gps_sat.update()
+            self.body_panel.tilt_x_tilt_y.update()
+
+            # self.body_panel.map.latitude = float(new_plot[14])
+            # self.body_panel.map.longitude =float(new_plot[14])
+            # self.body_panel.map.zoom = float(new_plot[15])
+            # self.body_panel.map.update()
+
             packet += 1
             altitude += 0.5
             time += 1

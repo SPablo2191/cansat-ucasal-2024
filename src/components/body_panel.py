@@ -32,14 +32,6 @@ class BodyPanel:
         self.temperature_chart = get_plot_chart(data, "Temperature (C°)", "Time (s)")
         self.air_speed_chart = get_plot_chart(data, "Air Speed (kPa)", "Time (s)")
         self.chart_container = self.get_charts()
-        self.animated_switcher = AnimatedSwitcher(
-            self.chart_container,
-            transition=AnimatedSwitcherTransition.SCALE,
-            duration=500,
-            reverse_duration=100,
-            switch_in_curve=AnimationCurve.BOUNCE_OUT,
-            switch_out_curve=AnimationCurve.BOUNCE_IN,
-        )
         self.map = FletMap(
             expand=True,
             latitude=gps_latitude,
@@ -78,8 +70,14 @@ class BodyPanel:
             size=25,
         )
         self.map_container = self.get_map()
+        self.map_container.visible = False
         self.content = Container(
-            content=self.animated_switcher,
+            content=Column(
+                controls=[
+                    self.chart_container,
+                    self.map_container
+                ]
+            ),
             padding=padding.symmetric(10, 30),
             alignment=alignment.center,
             border_radius=10,
@@ -92,10 +90,12 @@ class BodyPanel:
             ),
         )
     def set_charts(self):
-        self.animated_switcher.content = self.chart_container
+        self.map_container.visible = False
+        self.chart_container.visible = True
         self.page.update()
     def set_maps(self):
-        self.animated_switcher.content = self.map_container
+        self.chart_container.visible = False
+        self.map_container.visible = True
         self.page.update()
     
     def get_charts(self):
@@ -128,7 +128,7 @@ class BodyPanel:
                 ),
             ],
         )
-    def update_chart(self,data: list[LineChartDataPoint]):
+    def update_altitude_chart(self,data: list[LineChartDataPoint]):
         chart_data = [
         LineChartData(
             data_points=data,
@@ -143,6 +143,54 @@ class BodyPanel:
         self.altitude_chart.max_x = max(point.x for point in data)
         self.altitude_chart.update()
         self.page.update()
+
+    def update_air_speed_chart(self,data: list[LineChartDataPoint]):
+        chart_data = [
+        LineChartData(
+            data_points=data,
+            color= colors.LIGHT_GREEN,
+            stroke_width=5,
+            curved=True,
+            stroke_cap_round=True,
+        )
+    ]
+        self.air_speed_chart.data_series = chart_data
+        self.air_speed_chart.max_y = max(point.y for point in data)
+        self.air_speed_chart.max_x = max(point.x for point in data)
+        self.air_speed_chart.update()
+        self.page.update()
+    def update_voltage_chart(self,data: list[LineChartDataPoint]):
+        chart_data = [
+        LineChartData(
+            data_points=data,
+            color= colors.PINK,
+            stroke_width=5,
+            curved=True,
+            stroke_cap_round=True,
+        )
+    ]
+        self.voltage_chart.data_series = chart_data
+        self.voltage_chart.max_y = max(point.y for point in data)
+        self.voltage_chart.max_x = max(point.x for point in data)
+        self.voltage_chart.update()
+        self.page.update()
+    def update_temperature_chart(self,data: list[LineChartDataPoint]):
+        chart_data = [
+        LineChartData(
+            data_points=data,
+            color= colors.RED,
+            stroke_width=5,
+            curved=True,
+            stroke_cap_round=True,
+        )
+    ]
+        self.temperature_chart.data_series = chart_data
+        self.temperature_chart.max_y = max(point.y for point in data)
+        self.temperature_chart.max_x = max(point.x for point in data)
+        self.temperature_chart.update()
+        self.page.update()
+    
+    
 
     def get_map(self):
         return Column(
