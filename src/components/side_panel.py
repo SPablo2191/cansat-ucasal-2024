@@ -72,6 +72,7 @@ class SidePanel:
             icon=icons.BROADCAST_ON_PERSONAL_SHARP,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
+            on_click= self.set_sim_enable
         )
 
         self.sim_activate_button = ElevatedButton(
@@ -79,6 +80,7 @@ class SidePanel:
             icon=icons.BROADCAST_ON_HOME_OUTLINED,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
+            disabled=True
         )
 
         self.parachute_button = ElevatedButton(
@@ -88,9 +90,9 @@ class SidePanel:
             width=button_width,
         )
 
-        self.export_button = ElevatedButton(
-            "Export",
-            icon=icons.IMPORT_EXPORT_ROUNDED,
+        self.heat_shield_button = ElevatedButton(
+            "Heat Shield",
+            icon=icons.SHIELD_ROUNDED,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
         )
@@ -116,7 +118,7 @@ class SidePanel:
                     self.sim_enable_button,
                     self.sim_activate_button,
                     self.parachute_button,
-                    self.export_button,
+                    self.heat_shield_button,
                     Row(
                         controls=[
                             self.get_repo_button(page=page, bgcolor=background_color),
@@ -175,6 +177,10 @@ class SidePanel:
         self.simulation_mode_switch.value = not self.simulation_mode_switch.value
         self.simulation_mode_switch.disabled = not self.simulation_mode_switch.disabled
         self.simulation_mode_switch.update()
+    
+    def set_sim_enable(self,e):
+        self.sim_activate_button.disabled = not self.sim_activate_button.disabled
+        self.sim_activate_button.update()
 
     def get_mission_time(self, mission_time: str):
         return Column(

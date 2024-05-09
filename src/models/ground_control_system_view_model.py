@@ -10,8 +10,12 @@ from components.side_panel import SidePanel
 
 
 class State(StrEnum):
+    PRE_LAUNCH = "Pre Launch"
     ASCENT = "Ascent"
+    DESCENT = "Descent"
+    SEPARATION = "Separation"
     SIMULATION = "Simulation"
+    LANDED = "Landed"
 
 
 class GroundControlSystemViewModel:
@@ -20,7 +24,7 @@ class GroundControlSystemViewModel:
         self.mission_time = "00:00:00"
         self.packet_count = 0
         self.team_id = 2030
-        self.state = State.ASCENT
+        self.state = State.PRE_LAUNCH
         self.altitude = 0
         self.air_speed = 0
         self.hs_deployed = False  # heatshield state

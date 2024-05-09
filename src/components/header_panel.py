@@ -19,6 +19,7 @@ from flet import (
     IconButton,
     MainAxisAlignment,
     Page,
+    SnackBar,
 )
 from time import sleep
 
@@ -46,7 +47,8 @@ class HeaderPanel:
             icon=icons.PLAY_CIRCLE_FILLED_ROUNDED,
             icon_color=colors.GREEN,
             icon_size=80,
-            tooltip="Telemetry"
+            tooltip="Telemetry",
+            disabled=True
         )
         self.disconnect_button = ElevatedButton(
             "DISCONNECT",
@@ -54,6 +56,7 @@ class HeaderPanel:
             icon=icons.LOGOUT_ROUNDED,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
+            on_click=self.disconnect
         )
         self.connect_button = ElevatedButton(
             "CONNECT",
@@ -61,6 +64,7 @@ class HeaderPanel:
             icon=icons.LOGIN_ROUNDED,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
+            on_click=self.connect
         )
         self.button_wrapper = Column(
             controls=[
@@ -87,9 +91,9 @@ class HeaderPanel:
                     self.voltage,
                     self.serials,
                     self.button_wrapper,
-                    self.telemetry_wrapper
+                    self.telemetry_wrapper,
                 ],
-                spacing=30,
+                spacing=20,
                 alignment=MainAxisAlignment.CENTER,
             ),
             padding=padding.symmetric(10, 30),
@@ -103,16 +107,17 @@ class HeaderPanel:
                 blur_style=ShadowBlurStyle.OUTER,
             ),
         )
+
     # telemetry
-    def change_telemetry_button(self,e):
+    def change_telemetry_button(self, e):
         if self.telemetry_button.icon_color == colors.GREEN:
             self.telemetry_button.icon_color = colors.RED
             self.telemetry_button.icon = icons.PAUSE_CIRCLE_FILLED_ROUNDED
         else:
             self.telemetry_button.icon_color = colors.GREEN
-            self.telemetry_button.icon = icons.PLAY_CIRCLE_FILLED_ROUNDED  
+            self.telemetry_button.icon = icons.PLAY_CIRCLE_FILLED_ROUNDED
         self.telemetry_button.update()
-        
+
     # state
     def set_state(self, value: str):
         self.state.controls[1].value = value
@@ -147,6 +152,36 @@ class HeaderPanel:
             horizontal_alignment=CrossAxisAlignment.CENTER,
         )
 
+    def connect(self, e):
+        option = self.find_option(self.serials.controls[1].value)
+        if option is None:
+            return
+        self.disconnect_button.disabled = not self.disconnect_button.disabled
+        self.telemetry_button.disabled = not self.telemetry_button.disabled
+        self.disconnect_button.update()
+        self.telemetry_button.update()
+        self.page.snack_bar = SnackBar(content=Text(f"Port {option}: Connected"))
+        self.page.snack_bar.open = True
+        self.page.update()
+    def disconnect(self, e):
+        option = self.find_option(self.serials.controls[1].value)
+        if option is None:
+            return
+        self.disconnect_button.disabled = not self.disconnect_button.disabled
+        self.telemetry_button.disabled = not self.telemetry_button.disabled
+        self.disconnect_button.update()
+        self.telemetry_button.update()
+        self.page.snack_bar = SnackBar(content=Text(f"Port {option}: Disconnected"))
+        self.page.snack_bar.open = True
+        self.page.update()
+
+
+    def find_option(self, option_name):
+        for option in self.serials.controls[1].options:
+            if option_name == option.key:
+                return option
+        return None
+
     def get_serial_port_options(self):
         return Column(
             controls=[
@@ -155,9 +190,12 @@ class HeaderPanel:
                     hint_text="Choose a port...",
                     width=200,
                     options=[
-                        dropdown.Option("Red"),
-                        dropdown.Option("Green"),
-                        dropdown.Option("Blue"),
+                        dropdown.Option(
+                            "COM1: Communications Port (COM1) [ACPI\PNP0501\1]"
+                        ),
+                        dropdown.Option(
+                            "COM7: MediaTek USB Port (COM7) [USB VID:PID=0E8D:0003 SER=6 LOCATION=1-2.1]"
+                        ),
                     ],
                 ),
             ],
