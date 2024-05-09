@@ -1,16 +1,11 @@
 import flet as ft
 import threading
-
-from components.side_panel import SidePanel
-from components.header_panel import HeaderPanel
-from components.console_panel import ConsolePanel
-from components.body_panel import BodyPanel
-from models.ground_control_system_view_model import GroundControlSystemViewModel, State
+from models.ground_control_system_view_model import GroundControlSystemViewModel
 
 
 def main(page: ft.Page):
     # configuration
-    groundControlSystemViewModel = GroundControlSystemViewModel()
+    groundControlSystemViewModel = GroundControlSystemViewModel(page=page)
     page.title = groundControlSystemViewModel.system_name
     page.fonts = {"inria sans": "fonts/inria-sans.ttf"}
     page.theme = ft.Theme(font_family="inria sans")
@@ -21,62 +16,47 @@ def main(page: ft.Page):
     page.splash = ft.ProgressBar(visible=False)
 
     # Functions (Events)
-
-    def go_to_chart(e):
-        body_panel.set_charts()
-
-    def go_to_map(e):
-        body_panel.set_maps()
-
     def connect(e):
-        counter_thread = threading.Thread(target=side_panel.stop_watch)
-        packet_thread = threading.Thread(target=header_panel.packet_increase)
-        counter_thread.setDaemon(True)
-        packet_thread.setDaemon(True)
-        counter_thread.start()
-        packet_thread.start()
+        if not groundControlSystemViewModel.telemetry:
+            groundControlSystemViewModel.telemetry = True
+            groundControlSystemViewModel.side_panel.set_telemetry_switch(e)
+            groundControlSystemViewModel.side_panel.set_simulation_switch(e)
+            groundControlSystemViewModel.side_panel.mission_in_progress = True
+            groundControlSystemViewModel.header_panel.change_telemetry_button(e)
+            counter_thread = threading.Thread(
+            target=groundControlSystemViewModel.side_panel.stop_watch
+            )
+            serial_thread = threading.Thread(
+                target= groundControlSystemViewModel.serial
+            )
+            counter_thread.setDaemon(True)
+            serial_thread.setDaemon(True)
+            counter_thread.start()
+            serial_thread.start()
+        else:
+            groundControlSystemViewModel.telemetry = False
+            groundControlSystemViewModel.side_panel.mission_in_progress = False
+            groundControlSystemViewModel.header_panel.change_telemetry_button(e)
+            groundControlSystemViewModel.side_panel.set_telemetry_switch(e)
+            groundControlSystemViewModel.side_panel.set_simulation_switch(e)
 
-    # Components
-    body_panel = BodyPanel(
-        data=groundControlSystemViewModel.data_points_example,
-        gps_altitude=groundControlSystemViewModel.gps_altitude,
-        gps_latitude=groundControlSystemViewModel.gps_latitude,
-        gps_longitude=groundControlSystemViewModel.gps_longitude,
-        page=page,
-    )
-    side_panel = SidePanel(
-        team_id=groundControlSystemViewModel.team_id,
-        mission_time=groundControlSystemViewModel.mission_time,
-        telemetry=groundControlSystemViewModel.telemetry,
-        heat_shield=groundControlSystemViewModel.hs_deployed,
-        simulation_mode=groundControlSystemViewModel.state == State.SIMULATION,
-        page=page,
-    )
-    side_panel.charts_button.on_click = go_to_chart
-    side_panel.map_button.on_click = go_to_map
+    # Components (Events)
 
-    header_panel = HeaderPanel(
-        state=groundControlSystemViewModel.state,
-        packet_count=groundControlSystemViewModel.packet_count,
-        temperature=groundControlSystemViewModel.temperature,
-        pressure=groundControlSystemViewModel.pressure,
-        voltage=groundControlSystemViewModel.voltage,
-        page=page,
-    )
-    header_panel.connect_button.on_click = connect
+    groundControlSystemViewModel.side_panel.charts_button.on_click = groundControlSystemViewModel.body_panel.set_charts
+    groundControlSystemViewModel.side_panel.map_button.on_click = groundControlSystemViewModel.body_panel.set_maps
+    groundControlSystemViewModel.header_panel.telemetry_button.on_click = connect
 
-
-    console_panel = ConsolePanel(
-        command=groundControlSystemViewModel.command,
-        received_data=groundControlSystemViewModel.received_data,
-    )
     # Page structure
     page.add(
         ft.Row(
             controls=[
-                side_panel.content,
+                groundControlSystemViewModel.side_panel.content,
                 ft.Column(
-                    controls=[header_panel.content, body_panel.content, console_panel.content],
+                    controls=[
+                        groundControlSystemViewModel.header_panel.content,
+                        groundControlSystemViewModel.body_panel.content,
+                        groundControlSystemViewModel.console_panel.content,
+                    ],
                     alignment=ft.MainAxisAlignment.START,
                     expand=True,
                     height=1150,
