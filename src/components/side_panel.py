@@ -72,6 +72,7 @@ class SidePanel:
             icon=icons.BROADCAST_ON_PERSONAL_SHARP,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
+            disabled= True,
             on_click= self.set_sim_enable
         )
 
@@ -88,6 +89,7 @@ class SidePanel:
             icon=icons.PARAGLIDING,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
+            disabled=True
         )
 
         self.heat_shield_button = ElevatedButton(
@@ -95,6 +97,7 @@ class SidePanel:
             icon=icons.SHIELD_ROUNDED,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
+            disabled=True
         )
 
         self.content = Container(

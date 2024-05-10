@@ -55,16 +55,14 @@ class HeaderPanel:
             disabled=True,
             icon=icons.LOGOUT_ROUNDED,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
-            width=button_width,
-            on_click=self.disconnect
+            width=button_width
         )
         self.connect_button = ElevatedButton(
             "CONNECT",
             disabled=False,
             icon=icons.LOGIN_ROUNDED,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
-            width=button_width,
-            on_click=self.connect
+            width=button_width
         )
         self.button_wrapper = Column(
             controls=[
@@ -151,36 +149,6 @@ class HeaderPanel:
             ],
             horizontal_alignment=CrossAxisAlignment.CENTER,
         )
-
-    def connect(self, e):
-        option = self.find_option(self.serials.controls[1].value)
-        if option is None:
-            return
-        self.disconnect_button.disabled = not self.disconnect_button.disabled
-        self.telemetry_button.disabled = not self.telemetry_button.disabled
-        self.disconnect_button.update()
-        self.telemetry_button.update()
-        self.page.snack_bar = SnackBar(content=Text(f"Port {option}: Connected"))
-        self.page.snack_bar.open = True
-        self.page.update()
-    def disconnect(self, e):
-        option = self.find_option(self.serials.controls[1].value)
-        if option is None:
-            return
-        self.disconnect_button.disabled = not self.disconnect_button.disabled
-        self.telemetry_button.disabled = not self.telemetry_button.disabled
-        self.disconnect_button.update()
-        self.telemetry_button.update()
-        self.page.snack_bar = SnackBar(content=Text(f"Port {option}: Disconnected"))
-        self.page.snack_bar.open = True
-        self.page.update()
-
-
-    def find_option(self, option_name):
-        for option in self.serials.controls[1].options:
-            if option_name == option.key:
-                return option
-        return None
 
     def get_serial_port_options(self):
         return Column(
