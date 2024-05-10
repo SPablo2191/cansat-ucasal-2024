@@ -83,6 +83,9 @@ class GroundControlSystemViewModel:
     def connect(self, e):
         option = self.find_option(self.header_panel.serials.controls[1].value)
         if option is None:
+            self.page.snack_bar = ft.SnackBar(content=ft.Text(f"Choose a port to connect"))
+            self.page.snack_bar.open = True
+            self.page.update()
             return
         self.header_panel.disconnect_button.disabled = (
             not self.header_panel.disconnect_button.disabled
@@ -96,11 +99,13 @@ class GroundControlSystemViewModel:
         self.header_panel.connect_button.disabled = (
             not self.header_panel.connect_button.disabled
         )
+        self.header_panel.serials.controls[1].disabled = not self.header_panel.serials.controls[1].disabled
+        self.header_panel.serials.controls[1].update()
         self.header_panel.connect_button.update()
         self.header_panel.disconnect_button.update()
         self.header_panel.telemetry_button.update()
         self.side_panel.sim_enable_button.update()
-        self.page.snack_bar = ft.SnackBar(content=ft.Text(f"Port {option}: Connected"))
+        self.page.snack_bar = ft.SnackBar(content=ft.Text(f"Port {option.text}: Connected"))
         self.page.snack_bar.open = True
         self.page.update()
 
@@ -117,9 +122,13 @@ class GroundControlSystemViewModel:
         self.header_panel.connect_button.disabled = (
             not self.header_panel.connect_button.disabled
         )
+        self.header_panel.connect_button.disabled = (
+            not self.header_panel.connect_button.disabled
+        )
         self.header_panel.connect_button.update()
         self.header_panel.disconnect_button.update()
         self.header_panel.telemetry_button.update()
+        self.side_panel.sim_enable_button.update()
         self.page.snack_bar = ft.SnackBar(
             content=ft.Text(f"Port {option}: Disconnected")
         )

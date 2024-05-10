@@ -47,7 +47,7 @@ class HeaderPanel:
             icon=icons.PLAY_CIRCLE_FILLED_ROUNDED,
             icon_color=colors.GREEN,
             icon_size=80,
-            tooltip="Telemetry",
+            tooltip="Start Mission",
             disabled=True
         )
         self.disconnect_button = ElevatedButton(
@@ -111,9 +111,11 @@ class HeaderPanel:
         if self.telemetry_button.icon_color == colors.GREEN:
             self.telemetry_button.icon_color = colors.RED
             self.telemetry_button.icon = icons.PAUSE_CIRCLE_FILLED_ROUNDED
+            self.telemetry_button.tooltip = 'Finish Mission'
         else:
             self.telemetry_button.icon_color = colors.GREEN
             self.telemetry_button.icon = icons.PLAY_CIRCLE_FILLED_ROUNDED
+            self.telemetry_button.tooltip = 'Start Mission'
         self.telemetry_button.update()
 
     # state
@@ -159,10 +161,12 @@ class HeaderPanel:
                     width=200,
                     options=[
                         dropdown.Option(
-                            "COM1: Communications Port (COM1) [ACPI\PNP0501\1]"
+                            key = "COM1: Communications Port (COM1) [ACPI\PNP0501\1]",
+                            text = "Communications Port (COM1)"
                         ),
                         dropdown.Option(
-                            "COM7: MediaTek USB Port (COM7) [USB VID:PID=0E8D:0003 SER=6 LOCATION=1-2.1]"
+                            key = "COM7: MediaTek USB Port (COM7) [USB VID:PID=0E8D:0003 SER=6 LOCATION=1-2.1]",
+                            text = "MediaTek USB Port (COM7)"
                         ),
                     ],
                 ),
