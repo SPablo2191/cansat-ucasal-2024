@@ -1,6 +1,7 @@
 import serial as serial
 from csvHelper import escribir_en_csv
-
+# GROUND STATION 16 BIT ADDRESS IS 0013
+# PAYLOAD 16 BIT ADDRESS IS 0011 
 buffer = bytearray();
 telemetry = [];
 
@@ -29,6 +30,7 @@ try:
                 # Cansat2021.CsvHelper.writeCsvFromList(telemetry, export)  # escribe los datos en un CSV file
              
         
+
 
 except KeyboardInterrupt:
     # (Ctrl+C)
