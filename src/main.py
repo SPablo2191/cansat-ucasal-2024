@@ -20,7 +20,6 @@ def main(page: ft.Page):
         if not groundControlSystemViewModel.telemetry:
             groundControlSystemViewModel.telemetry = True
             groundControlSystemViewModel.side_panel.set_telemetry_switch(e)
-            groundControlSystemViewModel.side_panel.set_simulation_switch(e)
             groundControlSystemViewModel.side_panel.mission_in_progress = True
             groundControlSystemViewModel.header_panel.change_telemetry_button(e)
             counter_thread = threading.Thread(

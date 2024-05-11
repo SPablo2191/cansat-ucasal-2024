@@ -99,6 +99,13 @@ class SidePanel:
             width=button_width,
             disabled=True
         )
+        self.beacon_button = ElevatedButton(
+            "Beacon",
+            icon=icons.PANORAMA_PHOTOSPHERE,
+            style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
+            width=button_width,
+            disabled=True
+        )
 
         self.content = Container(
             content=Column(
@@ -122,6 +129,7 @@ class SidePanel:
                     self.sim_activate_button,
                     self.parachute_button,
                     self.heat_shield_button,
+                    self.beacon_button,
                     Row(
                         controls=[
                             self.get_repo_button(page=page, bgcolor=background_color),
@@ -183,7 +191,15 @@ class SidePanel:
     
     def set_sim_enable(self,e):
         self.sim_activate_button.disabled = not self.sim_activate_button.disabled
+        self.set_simulation_switch(e)
         self.sim_activate_button.update()
+    def set_sim_activate(self,e):
+        self.set_telemetry_switch(e)
+        self.sim_activate_button.disabled = not self.sim_activate_button.disabled
+        self.sim_enable_button.disabled = not self.sim_enable_button.disabled
+        self.sim_activate_button.update()
+        self.sim_enable_button.update()
+
 
     def get_mission_time(self, mission_time: str):
         return Column(
