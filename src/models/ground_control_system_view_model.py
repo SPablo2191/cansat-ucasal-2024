@@ -3,6 +3,8 @@ from enum import StrEnum
 from random import randint, uniform
 from time import sleep
 from datetime import datetime
+import threading
+
 from components.body_panel import BodyPanel
 from components.console_panel import ConsolePanel
 from components.header_panel import HeaderPanel
@@ -66,6 +68,11 @@ class GroundControlSystemViewModel:
             page=self.page,
         )
         self.side_panel.sim_enable_button.on_click = self.set_simulation_mode
+        self.side_panel.sim_activate_button.on_click = self.send_sim_enable_command
+        self.side_panel.beacon_button.on_click = self.send_beacon_command
+        self.side_panel.parachute_button.on_click = self.send_parachute_command
+        self.side_panel.heat_shield_button.on_click = self.send_heatshield_command
+
         self.header_panel = HeaderPanel(
             state=self.state,
             packet_count=self.packet_count,
@@ -74,6 +81,7 @@ class GroundControlSystemViewModel:
             voltage=self.voltage,
             page=self.page,
         )
+        self.header_panel.telemetry_button.on_click = self.telemetry_start
         self.header_panel.connect_button.on_click = self.connect
         self.header_panel.disconnect_button.on_click = self.disconnect
         self.console_panel = ConsolePanel(
@@ -84,9 +92,40 @@ class GroundControlSystemViewModel:
     def set_telemetry(self):
         self.telemetry = not self.telemetry
 
-    def set_simulation_mode(self,e):
+    def set_simulation_mode(self, e):
         self.side_panel.set_sim_enable(e)
-        self.header_panel.set_state(State.SIMULATION)
+
+    def send_parachute_command(self, e):
+        #
+        self.page.snack_bar = ft.SnackBar(
+            content=ft.Text(f"Command '' sent succesfully")
+        )
+        self.page.snack_bar.open = True
+        self.page.update()
+
+    def send_heatshield_command(self, e):
+        #
+        self.page.snack_bar = ft.SnackBar(
+            content=ft.Text(f"Command '' sent succesfully")
+        )
+        self.page.snack_bar.open = True
+        self.page.update()
+
+    def send_sim_enable_command(self, e):
+        #
+        self.page.snack_bar = ft.SnackBar(
+            content=ft.Text(f"Command 'CMD,2030,SIM,ENABLE' sent succesfully")
+        )
+        self.page.snack_bar.open = True
+        self.page.update()
+
+    def send_beacon_command(self, e):
+        #
+        self.page.snack_bar = ft.SnackBar(
+            content=ft.Text(f"Command 'CMD,2030,BCN,ON' sent succesfully")
+        )
+        self.page.snack_bar.open = True
+        self.page.update()
 
     def connect(self, e):
         option = self.find_option(self.header_panel.serials.controls[1].value)
@@ -161,83 +200,113 @@ class GroundControlSystemViewModel:
                 return option
         return None
 
+    def telemetry_start(self, e):
+        if not self.telemetry:
+            self.set_telemetry()
+            self.side_panel.set_telemetry_switch(e)
+            self.side_panel.set_mission_progress()
+            # enable command buttons
+            self.side_panel.set_beacon(e)
+            self.side_panel.set_heat_shield(e)
+            self.side_panel.set_parachute(e)
+
+            self.header_panel.change_telemetry_button(e)
+            counter_thread = threading.Thread(target=self.side_panel.stop_watch)
+            serial_thread = threading.Thread(target=self.serial)
+            counter_thread.setDaemon(True)
+            serial_thread.setDaemon(True)
+            counter_thread.start()
+            serial_thread.start()
+        else:
+            self.set_telemetry()
+            self.side_panel.set_mission_progress()
+            self.header_panel.change_telemetry_button(e)
+            self.side_panel.set_telemetry_switch(e)
+            # enable command buttons
+            self.side_panel.set_beacon(e)
+            self.side_panel.set_heat_shield(e)
+            self.side_panel.set_parachute(e)
+
+
     def serial(self):
         packet = 0
         altitude = 1.0
         time = 1
         while self.telemetry:
+            print("escuchando...")
             # llega la trama
-            new_plot = [
-                "2030",  # team_Id 0
-                str(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")),  # mission time 1
-                str(packet),  # packet 2
-                str(True),  # MODE 3
-                State.SIMULATION.value,  # State 4
-                str(altitude),  # altitude 5
-                str(uniform(1.0, 200.0)),  # air speed 6
-                str(randint(0, 1)),  # heat shield 7
-                str(randint(0, 1)),  # parachute 8
-                str(uniform(1.0, 100.0)),  # temperature 9
-                str(uniform(1, 5)),  # voltage 10
-                str(uniform(1.0, 100.0)),  # pressure 11
-                str(datetime.now().strftime("%H:%M:%S")),  # gps time 12
-                str(uniform(1.0, 200.0)),  # gps altitude 13
-                str(uniform(1.0, 200.0)),  # latitude 14
-                str(uniform(1.0, 200.0)),  # longitude 15
-                str(uniform(1.0, 200.0)),  # sats 16
-                str(uniform(1.0, 200.0)),  # tilt X 17
-                str(uniform(1.0, 200.0)),  # tilt y 18
-                str(uniform(1.0, 200.0)),  # rot z 19
-                "comando",  # cmd echo 20
-            ]
-            print(new_plot)
-            # header
-            self.header_panel.set_state(new_plot[4])
-            self.header_panel.set_packet(int(new_plot[2]))
-            self.header_panel.set_temperature(float(new_plot[9]))
-            self.header_panel.set_voltage(float(new_plot[10]))
-            self.header_panel.set_pressure(float(new_plot[11]))
-            # console
-            self.console_panel.set_received(" ; ".join(new_plot))
-            # body
-            # Charts
-            self.altitude_data_points.append(ft.LineChartDataPoint(time, new_plot[5]))
-            self.body_panel.update_altitude_chart(self.altitude_data_points)
+            # new_plot = [
+            #     "2030",  # team_Id 0
+            #     str(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")),  # mission time 1
+            #     str(packet),  # packet 2
+            #     str(True),  # MODE 3
+            #     State.SIMULATION.value,  # State 4
+            #     str(altitude),  # altitude 5
+            #     str(uniform(1.0, 200.0)),  # air speed 6
+            #     str(randint(0, 1)),  # heat shield 7
+            #     str(randint(0, 1)),  # parachute 8
+            #     str(uniform(1.0, 100.0)),  # temperature 9
+            #     str(uniform(1, 5)),  # voltage 10
+            #     str(uniform(1.0, 100.0)),  # pressure 11
+            #     str(datetime.now().strftime("%H:%M:%S")),  # gps time 12
+            #     str(uniform(1.0, 200.0)),  # gps altitude 13
+            #     str(uniform(1.0, 200.0)),  # latitude 14
+            #     str(uniform(1.0, 200.0)),  # longitude 15
+            #     str(uniform(1.0, 200.0)),  # sats 16
+            #     str(uniform(1.0, 200.0)),  # tilt X 17
+            #     str(uniform(1.0, 200.0)),  # tilt y 18
+            #     str(uniform(1.0, 200.0)),  # rot z 19
+            #     "comando",  # cmd echo 20
+            # ]
+            # print(new_plot)
 
-            self.temperature_data_points.append(
-                ft.LineChartDataPoint(time, new_plot[9])
-            )
-            self.body_panel.update_temperature_chart(self.temperature_data_points)
+            # # header
+            # self.header_panel.set_state(new_plot[4])
+            # self.header_panel.set_packet(int(new_plot[2]))
+            # self.header_panel.set_temperature(float(new_plot[9]))
+            # self.header_panel.set_voltage(float(new_plot[10]))
+            # self.header_panel.set_pressure(float(new_plot[11]))
+            # # console
+            # self.console_panel.set_received(" ; ".join(new_plot))
+            # # body
+            # # Charts
+            # self.altitude_data_points.append(ft.LineChartDataPoint(time, new_plot[5]))
+            # self.body_panel.update_altitude_chart(self.altitude_data_points)
 
-            self.voltage_data_points.append(ft.LineChartDataPoint(time, new_plot[10]))
-            self.body_panel.update_voltage_chart(self.voltage_data_points)
+            # self.temperature_data_points.append(
+            #     ft.LineChartDataPoint(time, new_plot[9])
+            # )
+            # self.body_panel.update_temperature_chart(self.temperature_data_points)
 
-            self.air_speed_data_points.append(ft.LineChartDataPoint(time, new_plot[11]))
-            self.body_panel.update_air_speed_chart(self.air_speed_data_points)
+            # self.voltage_data_points.append(ft.LineChartDataPoint(time, new_plot[10]))
+            # self.body_panel.update_voltage_chart(self.voltage_data_points)
 
-            # maps
-            self.body_panel.altitude.value = f"{round(float(new_plot[13]),2)}"
-            self.body_panel.latitude.value = f"{round(float(new_plot[14]),7)}"
-            self.body_panel.longitude.value = f"{round(float(new_plot[15]),7)}"
-            self.body_panel.gps_sat.value = f"{round(float(new_plot[16]),2)}"
-            self.body_panel.tilt_x_tilt_y.value = (
-                f"{round(float(new_plot[17]),2)},{round(float(new_plot[18]),2)}"
-            )
-            self.body_panel.rot_z.value = f"{new_plot[19]:02}"
+            # self.air_speed_data_points.append(ft.LineChartDataPoint(time, new_plot[11]))
+            # self.body_panel.update_air_speed_chart(self.air_speed_data_points)
 
-            self.body_panel.altitude.update()
-            self.body_panel.latitude.update()
-            self.body_panel.longitude.update()
-            self.body_panel.gps_sat.update()
-            self.body_panel.tilt_x_tilt_y.update()
-            self.body_panel.rot_z.update()
+            # # maps
+            # self.body_panel.altitude.value = f"{round(float(new_plot[13]),2)}"
+            # self.body_panel.latitude.value = f"{round(float(new_plot[14]),7)}"
+            # self.body_panel.longitude.value = f"{round(float(new_plot[15]),7)}"
+            # self.body_panel.gps_sat.value = f"{round(float(new_plot[16]),2)}"
+            # self.body_panel.tilt_x_tilt_y.value = (
+            #     f"{round(float(new_plot[17]),2)},{round(float(new_plot[18]),2)}"
+            # )
+            # self.body_panel.rot_z.value = f"{new_plot[19]:02}"
 
-            # self.body_panel.map.latitude = float(new_plot[14])
-            # self.body_panel.map.longitude =float(new_plot[14])
-            # self.body_panel.map.zoom = float(new_plot[15])
-            # self.body_panel.map.update()
+            # self.body_panel.altitude.update()
+            # self.body_panel.latitude.update()
+            # self.body_panel.longitude.update()
+            # self.body_panel.gps_sat.update()
+            # self.body_panel.tilt_x_tilt_y.update()
+            # self.body_panel.rot_z.update()
 
-            packet += 1
-            altitude += 0.5
-            time += 1
+            # # self.body_panel.map.latitude = float(new_plot[14])
+            # # self.body_panel.map.longitude =float(new_plot[14])
+            # # self.body_panel.map.zoom = float(new_plot[15])
+            # # self.body_panel.map.update()
+
+            # packet += 1
+            # altitude += 0.5
+            # time += 1
             sleep(1)

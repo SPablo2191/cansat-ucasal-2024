@@ -14,36 +14,10 @@ def main(page: ft.Page):
     page.scroll = ft.ScrollMode.HIDDEN
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.splash = ft.ProgressBar(visible=False)
-
-    # Functions (Events)
-    def connect(e):
-        if not groundControlSystemViewModel.telemetry:
-            groundControlSystemViewModel.set_telemetry()
-            groundControlSystemViewModel.side_panel.set_telemetry_switch(e)
-            groundControlSystemViewModel.side_panel.set_mission_progress()
-            groundControlSystemViewModel.header_panel.change_telemetry_button(e)
-            counter_thread = threading.Thread(
-            target=groundControlSystemViewModel.side_panel.stop_watch
-            )
-            serial_thread = threading.Thread(
-                target= groundControlSystemViewModel.serial
-            )
-            counter_thread.setDaemon(True)
-            serial_thread.setDaemon(True)
-            counter_thread.start()
-            serial_thread.start()
-        else:
-            groundControlSystemViewModel.set_telemetry()
-            groundControlSystemViewModel.side_panel.set_mission_progress()
-            groundControlSystemViewModel.header_panel.change_telemetry_button(e)
-            groundControlSystemViewModel.side_panel.set_telemetry_switch(e)
-            groundControlSystemViewModel.side_panel.set_simulation_switch(e)
-
     # Components (Events)
 
     groundControlSystemViewModel.side_panel.charts_button.on_click = groundControlSystemViewModel.body_panel.set_charts
     groundControlSystemViewModel.side_panel.map_button.on_click = groundControlSystemViewModel.body_panel.set_maps
-    groundControlSystemViewModel.header_panel.telemetry_button.on_click = connect
 
     # Page structure
     page.add(

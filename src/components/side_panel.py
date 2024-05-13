@@ -200,6 +200,18 @@ class SidePanel:
         self.sim_activate_button.update()
         self.sim_enable_button.update()
 
+    def set_parachute(self,e):
+        self.parachute_button.disabled = not self.parachute_button.disabled
+        self.parachute_button.update()
+
+    def set_heat_shield(self,e):
+        self.heat_shield_button.disabled = not self.heat_shield_button.disabled
+        self.heat_shield_button.update()
+
+    def set_beacon(self,e):
+        self.beacon_button.disabled = not self.beacon_button.disabled
+        self.beacon_button.update()
+
 
     def get_mission_time(self, mission_time: str):
         return Column(

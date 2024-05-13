@@ -162,11 +162,11 @@ class HeaderPanel:
                     options=[
                         dropdown.Option(
                             key = "COM1: Communications Port (COM1) [ACPI\PNP0501\1]",
-                            text = "Communications Port (COM1)"
+                            text = "COM1"
                         ),
                         dropdown.Option(
                             key = "COM7: MediaTek USB Port (COM7) [USB VID:PID=0E8D:0003 SER=6 LOCATION=1-2.1]",
-                            text = "MediaTek USB Port (COM7)"
+                            text = "COM7"
                         ),
                     ],
                 ),
