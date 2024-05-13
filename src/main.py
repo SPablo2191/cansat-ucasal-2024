@@ -18,9 +18,9 @@ def main(page: ft.Page):
     # Functions (Events)
     def connect(e):
         if not groundControlSystemViewModel.telemetry:
-            groundControlSystemViewModel.telemetry = True
+            groundControlSystemViewModel.set_telemetry()
             groundControlSystemViewModel.side_panel.set_telemetry_switch(e)
-            groundControlSystemViewModel.side_panel.mission_in_progress = True
+            groundControlSystemViewModel.side_panel.set_mission_progress()
             groundControlSystemViewModel.header_panel.change_telemetry_button(e)
             counter_thread = threading.Thread(
             target=groundControlSystemViewModel.side_panel.stop_watch
@@ -33,8 +33,8 @@ def main(page: ft.Page):
             counter_thread.start()
             serial_thread.start()
         else:
-            groundControlSystemViewModel.telemetry = False
-            groundControlSystemViewModel.side_panel.mission_in_progress = False
+            groundControlSystemViewModel.set_telemetry()
+            groundControlSystemViewModel.side_panel.set_mission_progress()
             groundControlSystemViewModel.header_panel.change_telemetry_button(e)
             groundControlSystemViewModel.side_panel.set_telemetry_switch(e)
             groundControlSystemViewModel.side_panel.set_simulation_switch(e)

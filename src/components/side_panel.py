@@ -72,8 +72,7 @@ class SidePanel:
             icon=icons.BROADCAST_ON_PERSONAL_SHARP,
             style=ButtonStyle(color=colors.WHITE, bgcolor=background_color),
             width=button_width,
-            disabled= True,
-            on_click= self.set_sim_enable
+            disabled= True
         )
 
         self.sim_activate_button = ElevatedButton(
@@ -155,7 +154,8 @@ class SidePanel:
             ),
             height=1150,
         )
-
+    def set_mission_progress(self):
+        self.mission_in_progress = not self.mission_in_progress
     def get_main_title(self, team_id: int):
         text_size = 20
         return Row(

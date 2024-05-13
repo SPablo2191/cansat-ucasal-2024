@@ -65,6 +65,7 @@ class GroundControlSystemViewModel:
             simulation_mode=self.state == State.SIMULATION,
             page=self.page,
         )
+        self.side_panel.sim_enable_button.on_click = self.set_simulation_mode
         self.header_panel = HeaderPanel(
             state=self.state,
             packet_count=self.packet_count,
@@ -80,10 +81,19 @@ class GroundControlSystemViewModel:
             received_data=self.received_data,
         )
 
+    def set_telemetry(self):
+        self.telemetry = not self.telemetry
+
+    def set_simulation_mode(self,e):
+        self.side_panel.set_sim_enable(e)
+        self.header_panel.set_state(State.SIMULATION)
+
     def connect(self, e):
         option = self.find_option(self.header_panel.serials.controls[1].value)
         if option is None:
-            self.page.snack_bar = ft.SnackBar(content=ft.Text(f"Choose a port to connect"))
+            self.page.snack_bar = ft.SnackBar(
+                content=ft.Text(f"Choose a port to connect")
+            )
             self.page.snack_bar.open = True
             self.page.update()
             return
@@ -99,13 +109,17 @@ class GroundControlSystemViewModel:
         self.header_panel.connect_button.disabled = (
             not self.header_panel.connect_button.disabled
         )
-        self.header_panel.serials.controls[1].disabled = not self.header_panel.serials.controls[1].disabled
+        self.header_panel.serials.controls[1].disabled = (
+            not self.header_panel.serials.controls[1].disabled
+        )
         self.header_panel.serials.controls[1].update()
         self.header_panel.connect_button.update()
         self.header_panel.disconnect_button.update()
         self.header_panel.telemetry_button.update()
         self.side_panel.sim_enable_button.update()
-        self.page.snack_bar = ft.SnackBar(content=ft.Text(f"Port {option.text}: Connected"))
+        self.page.snack_bar = ft.SnackBar(
+            content=ft.Text(f"Port {option.text}: Connected")
+        )
         self.page.snack_bar.open = True
         self.page.update()
 
@@ -122,15 +136,21 @@ class GroundControlSystemViewModel:
         self.header_panel.connect_button.disabled = (
             not self.header_panel.connect_button.disabled
         )
-        self.header_panel.connect_button.disabled = (
-            not self.header_panel.connect_button.disabled
+        self.side_panel.sim_enable_button.disabled = (
+            not self.side_panel.sim_enable_button.disabled
         )
+        # enable dropdown
+        self.header_panel.serials.controls[1].disabled = (
+            not self.header_panel.serials.controls[1].disabled
+        )
+        self.header_panel.serials.controls[1].update()
+
         self.header_panel.connect_button.update()
         self.header_panel.disconnect_button.update()
         self.header_panel.telemetry_button.update()
         self.side_panel.sim_enable_button.update()
         self.page.snack_bar = ft.SnackBar(
-            content=ft.Text(f"Port {option}: Disconnected")
+            content=ft.Text(f"Port {option.text}: Disconnected")
         )
         self.page.snack_bar.open = True
         self.page.update()
