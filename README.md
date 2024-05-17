@@ -1,5 +1,6 @@
 # CANSAT - UCASAL 2024 🚀
-
+# GROUND STATION 16 BIT ADDRESS IS 0013
+# PAYLOAD 16 BIT ADDRESS IS 0011 
 ## Project Overview
 
 The CANSAT-UCASAL-2024 project is developed using the FLET framework, combining Python and Flutter technologies. This project utilizes the Pandas library for data manipulation, and the Digi XBee Python library for communication with XBee modules. The goal of this project is to create an interface to show the data obtained from the xbee component.

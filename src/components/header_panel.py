@@ -23,6 +23,8 @@ from flet import (
 )
 from time import sleep
 
+from utils.serialPort import get_available_serial_ports 
+
 
 class HeaderPanel:
     def __init__(
@@ -152,23 +154,48 @@ class HeaderPanel:
             horizontal_alignment=CrossAxisAlignment.CENTER,
         )
 
+    def connect(self, e):
+        option = self.find_option(self.serials.controls[1].value)
+        if option is None:
+            return
+        self.disconnect_button.disabled = not self.disconnect_button.disabled
+        self.telemetry_button.disabled = not self.telemetry_button.disabled
+        self.disconnect_button.update()
+        self.telemetry_button.update()
+        self.page.snack_bar = SnackBar(content=Text(f"Port {option}: Connected"))
+        self.page.snack_bar.open = True
+        self.page.update()
+    def disconnect(self, e):
+        option = self.find_option(self.serials.controls[1].value)
+        if option is None:
+            return
+        self.disconnect_button.disabled = not self.disconnect_button.disabled
+        self.telemetry_button.disabled = not self.telemetry_button.disabled
+        self.disconnect_button.update()
+        self.telemetry_button.update()
+        self.page.snack_bar = SnackBar(content=Text(f"Port {option}: Disconnected"))
+        self.page.snack_bar.open = True
+        self.page.update()
+
+
+    def find_option(self, option_name):
+        for option in self.serials.controls[1].options:
+            if option_name == option.key:
+                return option
+        return None
+
     def get_serial_port_options(self):
+        available_ports = get_available_serial_ports()
+        serial_port_options =  [
+            dropdown.Option(key=port, text=port) for port in available_ports
+        ]
         return Column(
             controls=[
                 Text("Serial Port", weight=FontWeight.BOLD),
                 Dropdown(
                     hint_text="Choose a port...",
                     width=200,
-                    options=[
-                        dropdown.Option(
-                            key = "COM1: Communications Port (COM1) [ACPI\PNP0501\1]",
-                            text = "COM1"
-                        ),
-                        dropdown.Option(
-                            key = "COM7: MediaTek USB Port (COM7) [USB VID:PID=0E8D:0003 SER=6 LOCATION=1-2.1]",
-                            text = "COM7"
-                        ),
-                    ],
+                    options=serial_port_options,
                 ),
             ],
             horizontal_alignment=CrossAxisAlignment.CENTER,
