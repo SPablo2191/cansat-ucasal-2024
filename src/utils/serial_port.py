@@ -1,11 +1,25 @@
 import serial as serial
-from csvHelper import escribir_en_csv
+from serial.tools import list_ports
+
+
+from utils.csv_helper import escribir_en_csv
+
 # GROUND STATION 16 BIT ADDRESS IS 0013
 # PAYLOAD 16 BIT ADDRESS IS 0011 
-buffer = bytearray();
-telemetry = [];
+buffer = bytearray()
+telemetry = []
+
+
+
+
+
+
+
+
+
+
 def get_available_serial_ports():
-    serial_ports = serial.tools.list_ports.comports()
+    serial_ports = list_ports.comports()
     port_names = [serial_port.device for serial_port in serial_ports]
     return port_names
 

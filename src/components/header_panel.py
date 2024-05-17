@@ -23,7 +23,7 @@ from flet import (
 )
 from time import sleep
 
-from utils.serialPort import get_available_serial_ports 
+from utils.serial_port import get_available_serial_ports 
 
 
 class HeaderPanel:

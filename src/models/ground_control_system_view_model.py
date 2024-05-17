@@ -10,6 +10,7 @@ from components.console_panel import ConsolePanel
 from components.header_panel import HeaderPanel
 from components.side_panel import SidePanel
 
+from utils.communication_helper import CommunicationHelper
 
 class State(StrEnum):
     PRE_LAUNCH = "Pre Launch"
@@ -51,6 +52,7 @@ class GroundControlSystemViewModel:
         self.air_speed_data_points = [ft.LineChartDataPoint(0, 0)]
         self.telemetry = False
         self.page = page
+        self.communication_helper = CommunicationHelper()
         # Components
         self.body_panel = BodyPanel(
             data=self.altitude_data_points,
@@ -136,6 +138,8 @@ class GroundControlSystemViewModel:
             self.page.snack_bar.open = True
             self.page.update()
             return
+        
+        # enable buttons
         self.header_panel.disconnect_button.disabled = (
             not self.header_panel.disconnect_button.disabled
         )
@@ -156,6 +160,10 @@ class GroundControlSystemViewModel:
         self.header_panel.disconnect_button.update()
         self.header_panel.telemetry_button.update()
         self.side_panel.sim_enable_button.update()
+
+        # Connect with the xbee
+        self.communication_helper.set_listener(option.text)
+        self.communication_helper.set_listener(option.text)
         self.page.snack_bar = ft.SnackBar(
             content=ft.Text(f"Port {option.text}: Connected")
         )
@@ -229,11 +237,8 @@ class GroundControlSystemViewModel:
 
 
     def serial(self):
-        packet = 0
-        altitude = 1.0
-        time = 1
         while self.telemetry:
-            print("escuchando...")
+            print(self.communication_helper.listen())
             # llega la trama
             # new_plot = [
             #     "2030",  # team_Id 0
