@@ -186,6 +186,7 @@ class HeaderPanel:
 
     def get_serial_port_options(self):
         available_ports = get_available_serial_ports()
+        print(available_ports)
         serial_port_options =  [
             dropdown.Option(key=port, text=port) for port in available_ports
         ]

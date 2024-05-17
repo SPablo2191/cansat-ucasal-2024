@@ -1,8 +1,8 @@
 import csv
 
-def escribir_en_csv(string_comas):
+def escribir_en_csv(telemetry_data : list[str]):
     nombre_archivo = r'src\data\Flight_2030.csv'
-    elementos = string_comas.split(',')
+    elementos = telemetry_data.split(',')
     # Abrir el archivo CSV en modo escritura
     with open(nombre_archivo, mode='a', newline='') as file:
         # Crear un objeto escritor CSV

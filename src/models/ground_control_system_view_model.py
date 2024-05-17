@@ -163,7 +163,7 @@ class GroundControlSystemViewModel:
 
         # Connect with the xbee
         self.communication_helper.set_listener(option.text)
-        self.communication_helper.set_listener(option.text)
+        self.communication_helper.set_sender(option.text)
         self.page.snack_bar = ft.SnackBar(
             content=ft.Text(f"Port {option.text}: Connected")
         )
@@ -238,8 +238,8 @@ class GroundControlSystemViewModel:
 
     def serial(self):
         while self.telemetry:
-            print(self.communication_helper.listen())
             # llega la trama
+            telemetry_data = self.communication_helper.listen()
             # new_plot = [
             #     "2030",  # team_Id 0
             #     str(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")),  # mission time 1
@@ -272,7 +272,7 @@ class GroundControlSystemViewModel:
             # self.header_panel.set_voltage(float(new_plot[10]))
             # self.header_panel.set_pressure(float(new_plot[11]))
             # # console
-            # self.console_panel.set_received(" ; ".join(new_plot))
+            self.console_panel.set_received(" ; ".join(telemetry_data))
             # # body
             # # Charts
             # self.altitude_data_points.append(ft.LineChartDataPoint(time, new_plot[5]))
@@ -314,4 +314,3 @@ class GroundControlSystemViewModel:
             # packet += 1
             # altitude += 0.5
             # time += 1
-            sleep(1)

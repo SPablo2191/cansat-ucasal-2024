@@ -11,9 +11,16 @@ class CommunicationHelper:
         self.buffer = bytearray()
         self.telemetry = []
     def set_listener(self,port : str):
-        self.listener = Serial(port=port, baudrate=self.BAUD_RATE)
+        try:
+            self.listener = Serial(port=port, baudrate=self.BAUD_RATE)
+        except Exception as e:
+            print(f"listener => {e}")
     def set_sender(self,port : str):
-        self.sender = XBeeDevice(port, self.BAUD_RATE)
+        try:
+            self.sender = XBeeDevice(port, self.BAUD_RATE)
+        except Exception as e:
+            print(f"sender => {e}")
+            
 
     def listen(self):
         byte_readed = self.listener.read(1)[0]
@@ -24,9 +31,7 @@ class CommunicationHelper:
         if len(self.buffer) >= 9:
             # buffer2 = self.buffer[2]
             aux = self.buffer[2] + 0x04
-            if aux == len(
-                self.buffer
-            ):  # pregunta si ya tenemos toda la trama dentro de buffer
+            if aux == len(self.buffer):  # pregunta si ya tenemos toda la trama dentro de buffer
                 message = ""
                 for i in range(8, len(self.buffer) - 1):
                     message += chr(self.buffer[i])
