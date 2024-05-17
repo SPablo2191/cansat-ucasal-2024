@@ -239,29 +239,6 @@ class GroundControlSystemViewModel:
         while self.telemetry:
             # llega la trama
             telemetry_data = self.communication_helper.listen()
-            # new_plot = [
-            #     "2030",  # team_Id 0
-            #     str(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")),  # mission time 1
-            #     str(packet),  # packet 2
-            #     str(True),  # MODE 3
-            #     State.SIMULATION.value,  # State 4
-            #     str(altitude),  # altitude 5
-            #     str(uniform(1.0, 200.0)),  # air speed 6
-            #     str(randint(0, 1)),  # heat shield 7
-            #     str(randint(0, 1)),  # parachute 8
-            #     str(uniform(1.0, 100.0)),  # temperature 9
-            #     str(uniform(1, 5)),  # voltage 10
-            #     str(uniform(1.0, 100.0)),  # pressure 11
-            #     str(datetime.now().strftime("%H:%M:%S")),  # gps time 12
-            #     str(uniform(1.0, 200.0)),  # gps altitude 13
-            #     str(uniform(1.0, 200.0)),  # latitude 14
-            #     str(uniform(1.0, 200.0)),  # longitude 15
-            #     str(uniform(1.0, 200.0)),  # sats 16
-            #     str(uniform(1.0, 200.0)),  # tilt X 17
-            #     str(uniform(1.0, 200.0)),  # tilt y 18
-            #     str(uniform(1.0, 200.0)),  # rot z 19
-            #     "comando",  # cmd echo 20
-            # ]
             if len(telemetry_data) == 0:
                 continue
             # csv
