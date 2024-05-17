@@ -66,6 +66,9 @@ class SidePanel:
         self.simulation_mode_switch = Switch(
             disabled=True, value=simulation_mode, label="Simulation Mode"
         )
+        self.parachute_switch = Switch(
+            disabled=True, value=False, label="Parachute"
+        )
 
         self.sim_enable_button = ElevatedButton(
             "Sim. Enable",
@@ -119,6 +122,7 @@ class SidePanel:
                         controls=[
                             self.telemety_switch,
                             self.heat_shield_switch,
+                            self.parachute_switch,
                             self.simulation_mode_switch,
                         ],
                         horizontal_alignment=CrossAxisAlignment.START,
@@ -176,22 +180,27 @@ class SidePanel:
             ],
             alignment=MainAxisAlignment.CENTER,
         )
-    def set_telemetry_switch(self,e):
+    def set_telemetry_switch(self):
         self.telemety_switch.value = not self.telemety_switch.value
         self.telemety_switch.disabled = not self.telemety_switch.disabled
         self.telemety_switch.update()
-    def set_heat_shield_switch(self,e):
+    def set_heat_shield_switch(self):
         self.heat_shield_switch.value = not self.heat_shield_switch.value
         self.heat_shield_switch.disabled = not self.heat_shield_switch.disabled
         self.heat_shield_switch.update()
-    def set_simulation_switch(self,e):
+    def set_simulation_switch(self):
         self.simulation_mode_switch.value = not self.simulation_mode_switch.value
         self.simulation_mode_switch.disabled = not self.simulation_mode_switch.disabled
         self.simulation_mode_switch.update()
-    
+
+    def set_parachute_switch(self):
+        self.parachute_switch.value = not self.parachute_switch.value
+        self.parachute_switch.disabled = not self.parachute_switch.disabled
+        self.parachute_switch.update()
+
     def set_sim_enable(self,e):
         self.sim_activate_button.disabled = not self.sim_activate_button.disabled
-        self.set_simulation_switch(e)
+        self.set_simulation_switch()
         self.sim_activate_button.update()
     def set_sim_activate(self,e):
         self.set_telemetry_switch(e)

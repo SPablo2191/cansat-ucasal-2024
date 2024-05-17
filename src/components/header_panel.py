@@ -24,6 +24,7 @@ from flet import (
 from time import sleep
 
 from utils.serial_port import get_available_serial_ports 
+from models.state import State
 
 
 class HeaderPanel:
@@ -122,7 +123,7 @@ class HeaderPanel:
 
     # state
     def set_state(self, value: str):
-        self.state.controls[1].value = value
+        self.state.controls[1].value = State[value].value
         self.state.controls[1].update()
 
     # packet

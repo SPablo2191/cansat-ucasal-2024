@@ -1,5 +1,4 @@
 import flet as ft
-from enum import StrEnum
 from random import randint, uniform
 from time import sleep
 from datetime import datetime
@@ -9,16 +8,10 @@ from components.body_panel import BodyPanel
 from components.console_panel import ConsolePanel
 from components.header_panel import HeaderPanel
 from components.side_panel import SidePanel
+from models.state import State
 
 from utils.communication_helper import CommunicationHelper
-
-class State(StrEnum):
-    PRE_LAUNCH = "Pre Launch"
-    ASCENT = "Ascent"
-    DESCENT = "Descent"
-    SEPARATION = "Separation"
-    SIMULATION = "Simulation"
-    LANDED = "Landed"
+from utils.csv_helper import write_in_csv
 
 
 class GroundControlSystemViewModel:
@@ -66,7 +59,7 @@ class GroundControlSystemViewModel:
             mission_time=self.mission_time,
             telemetry=self.telemetry,
             heat_shield=self.hs_deployed,
-            simulation_mode=self.state == State.SIMULATION,
+            simulation_mode=self.state == False,
             page=self.page,
         )
         self.side_panel.sim_enable_button.on_click = self.set_simulation_mode
@@ -138,7 +131,7 @@ class GroundControlSystemViewModel:
             self.page.snack_bar.open = True
             self.page.update()
             return
-        
+
         # enable buttons
         self.header_panel.disconnect_button.disabled = (
             not self.header_panel.disconnect_button.disabled
@@ -208,10 +201,16 @@ class GroundControlSystemViewModel:
                 return option
         return None
 
+    def parachute_deployed(self, value: str):
+        return value.upper() == "C"
+
+    def heat_shield_deployed(self, value: str):
+        return value.upper() == "P"
+
     def telemetry_start(self, e):
         if not self.telemetry:
             self.set_telemetry()
-            self.side_panel.set_telemetry_switch(e)
+            self.side_panel.set_telemetry_switch()
             self.side_panel.set_mission_progress()
             # enable command buttons
             self.side_panel.set_beacon(e)
@@ -229,14 +228,14 @@ class GroundControlSystemViewModel:
             self.set_telemetry()
             self.side_panel.set_mission_progress()
             self.header_panel.change_telemetry_button(e)
-            self.side_panel.set_telemetry_switch(e)
+            self.side_panel.set_telemetry_switch()
             # enable command buttons
             self.side_panel.set_beacon(e)
             self.side_panel.set_heat_shield(e)
             self.side_panel.set_parachute(e)
 
-
     def serial(self):
+        time = 0
         while self.telemetry:
             # llega la trama
             telemetry_data = self.communication_helper.listen()
@@ -263,54 +262,64 @@ class GroundControlSystemViewModel:
             #     str(uniform(1.0, 200.0)),  # rot z 19
             #     "comando",  # cmd echo 20
             # ]
-            # print(new_plot)
+            if len(telemetry_data) == 0:
+                continue
+            # csv
+            write_in_csv(telemetry_data)
+            # header
+            self.header_panel.set_state(telemetry_data[4])
+            self.header_panel.set_packet(int(telemetry_data[2]))
+            self.header_panel.set_temperature(float(telemetry_data[9]))
+            self.header_panel.set_voltage(float(telemetry_data[10]))
+            self.header_panel.set_pressure(float(telemetry_data[11]))
 
-            # # header
-            # self.header_panel.set_state(new_plot[4])
-            # self.header_panel.set_packet(int(new_plot[2]))
-            # self.header_panel.set_temperature(float(new_plot[9]))
-            # self.header_panel.set_voltage(float(new_plot[10]))
-            # self.header_panel.set_pressure(float(new_plot[11]))
-            # # console
+            # side panel
+            if self.heat_shield_deployed(telemetry_data[7]):
+                self.side_panel.set_heat_shield_switch()
+            if self.parachute_deployed(telemetry_data[8]):
+                self.side_panel.set_parachute_switch()
+            # console
             self.console_panel.set_received(" ; ".join(telemetry_data))
-            # # body
-            # # Charts
-            # self.altitude_data_points.append(ft.LineChartDataPoint(time, new_plot[5]))
-            # self.body_panel.update_altitude_chart(self.altitude_data_points)
 
-            # self.temperature_data_points.append(
-            #     ft.LineChartDataPoint(time, new_plot[9])
-            # )
-            # self.body_panel.update_temperature_chart(self.temperature_data_points)
+            # body
+            # Charts
+            self.altitude_data_points.append(
+                ft.LineChartDataPoint(time, telemetry_data[5])
+            )
+            self.body_panel.update_altitude_chart(self.altitude_data_points)
 
-            # self.voltage_data_points.append(ft.LineChartDataPoint(time, new_plot[10]))
-            # self.body_panel.update_voltage_chart(self.voltage_data_points)
+            self.temperature_data_points.append(
+                ft.LineChartDataPoint(time, telemetry_data[9])
+            )
+            self.body_panel.update_temperature_chart(self.temperature_data_points)
 
-            # self.air_speed_data_points.append(ft.LineChartDataPoint(time, new_plot[11]))
-            # self.body_panel.update_air_speed_chart(self.air_speed_data_points)
+            self.voltage_data_points.append(
+                ft.LineChartDataPoint(time, telemetry_data[10])
+            )
+            self.body_panel.update_voltage_chart(self.voltage_data_points)
 
-            # # maps
-            # self.body_panel.altitude.value = f"{round(float(new_plot[13]),2)}"
-            # self.body_panel.latitude.value = f"{round(float(new_plot[14]),7)}"
-            # self.body_panel.longitude.value = f"{round(float(new_plot[15]),7)}"
-            # self.body_panel.gps_sat.value = f"{round(float(new_plot[16]),2)}"
-            # self.body_panel.tilt_x_tilt_y.value = (
-            #     f"{round(float(new_plot[17]),2)},{round(float(new_plot[18]),2)}"
-            # )
-            # self.body_panel.rot_z.value = f"{new_plot[19]:02}"
+            self.air_speed_data_points.append(
+                ft.LineChartDataPoint(time, telemetry_data[11])
+            )
+            self.body_panel.update_air_speed_chart(self.air_speed_data_points)
 
-            # self.body_panel.altitude.update()
-            # self.body_panel.latitude.update()
-            # self.body_panel.longitude.update()
-            # self.body_panel.gps_sat.update()
-            # self.body_panel.tilt_x_tilt_y.update()
-            # self.body_panel.rot_z.update()
+            # maps
+            self.body_panel.altitude.value = f"{round(float(telemetry_data[13]),2)}"
+            self.body_panel.latitude.value = f"{round(float(telemetry_data[14]),7)}"
+            self.body_panel.longitude.value = f"{round(float(telemetry_data[15]),7)}"
+            self.body_panel.gps_sat.value = f"{round(float(telemetry_data[16]),2)}"
+            self.body_panel.tilt_x_tilt_y.value = f"{round(float(telemetry_data[17]),2)},{round(float(telemetry_data[18]),2)}"
+            self.body_panel.rot_z.value = f"{telemetry_data[19]:02}"
 
-            # # self.body_panel.map.latitude = float(new_plot[14])
-            # # self.body_panel.map.longitude =float(new_plot[14])
-            # # self.body_panel.map.zoom = float(new_plot[15])
-            # # self.body_panel.map.update()
+            self.body_panel.altitude.update()
+            self.body_panel.latitude.update()
+            self.body_panel.longitude.update()
+            self.body_panel.gps_sat.update()
+            self.body_panel.tilt_x_tilt_y.update()
+            self.body_panel.rot_z.update()
 
-            # packet += 1
-            # altitude += 0.5
-            # time += 1
+            # map 
+            # self.body_panel.map.latitude = float(telemetry_data[14])
+            # self.body_panel.map.longitude =float(telemetry_data[14])
+            # self.body_panel.map.zoom = float(telemetry_data[15])
+            # self.body_panel.map.update()
