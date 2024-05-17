@@ -4,7 +4,7 @@ import serial as serialHelper
 #     bytearray(b'~\x00\x13\x01\x01\x00\x10\x00CMD,2030,CX,ON\x98')
 import serial
 command = "CMD,2030,CX,ON"
-serial_port = 'COM9'  # Adjust the port according to your setup
+serial_port = 'COM5'  # Adjust the port according to your setup
 baud_rate = 19200  # Adjust the baud rate according to your setup
 
 

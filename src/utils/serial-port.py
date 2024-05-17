@@ -2,8 +2,8 @@ import serial as serial
 from csvHelper import escribir_en_csv
 # GROUND STATION 16 BIT ADDRESS IS 0013
 # PAYLOAD 16 BIT ADDRESS IS 0011 
-buffer = bytearray();
-telemetry = [];
+buffer = bytearray()
+telemetry = []
 
 puerto_serie = serial.Serial('COM5', 19200)  
 try:
