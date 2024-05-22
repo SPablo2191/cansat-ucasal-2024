@@ -107,17 +107,25 @@ class GroundControlSystemViewModel:
         self.page.update()
 
     def send_sim_enable_command(self, e):
-        #
+        command = 'CMD,2030,SIM,ENABLE'
+        try:
+            self.communication_helper.send(command)
+        except Exception as e:
+            print(e)
         self.page.snack_bar = ft.SnackBar(
-            content=ft.Text(f"Command 'CMD,2030,SIM,ENABLE' sent succesfully")
+            content=ft.Text(f"Command '{command}' sent succesfully")
         )
         self.page.snack_bar.open = True
         self.page.update()
 
     def send_beacon_command(self, e):
-        #
+        command = 'CMD,2030,BCN,ON'
+        try:
+            self.communication_helper.send(command)
+        except Exception as e:
+            print(e)
         self.page.snack_bar = ft.SnackBar(
-            content=ft.Text(f"Command 'CMD,2030,BCN,ON' sent succesfully")
+            content=ft.Text(f"Command '{command}' sent succesfully")
         )
         self.page.snack_bar.open = True
         self.page.update()
@@ -296,7 +304,10 @@ class GroundControlSystemViewModel:
             self.body_panel.rot_z.update()
 
             # map 
-            # self.body_panel.map.latitude = float(telemetry_data[14])
-            # self.body_panel.map.longitude =float(telemetry_data[14])
-            # self.body_panel.map.zoom = float(telemetry_data[15])
-            # self.body_panel.map.update()
+            try:
+                self.body_panel.map.latitude = float(telemetry_data[14])
+                self.body_panel.map.longitude =float(telemetry_data[14])
+                self.body_panel.map.zoom = float(telemetry_data[15])
+                self.body_panel.map.update()
+            except Exception as e:
+                print(e)
